@@ -18,7 +18,7 @@ import com.vladwild.chest.with.gems.buttons.gameplay.Back;
 import com.vladwild.chest.with.gems.buttons.gameplay.Home;
 import com.vladwild.chest.with.gems.buttons.gameplay.InvokerGamePlay;
 import com.vladwild.chest.with.gems.buttons.gameplay.ReceiverGamePlay;
-import com.vladwild.chest.with.gems.fonts.FactoryGamePlay;
+import com.vladwild.chest.with.gems.fonts.GamePlayFontFactory;
 import com.vladwild.chest.with.gems.gameplay.Arrow;
 import com.vladwild.chest.with.gems.gameplay.Chest;
 import com.vladwild.chest.with.gems.gameplay.DynamicObject;
@@ -122,10 +122,10 @@ public class GamePlay implements Screen {
             inputMultiplexer.addProcessor(stage);
         }
 
-        nameLevel = FactoryGamePlay.getTypeFont(FactoryGamePlay.NAME_LEVEL, gpi, gpm);
-        numberLevel = FactoryGamePlay.getTypeFont(FactoryGamePlay.NUMBER_LEVEL, gpi, gpm);
-        nameKeys = FactoryGamePlay.getTypeFont(FactoryGamePlay.NAME_KEYS, gpi, gpm);
-        countKeys = FactoryGamePlay.getTypeFont(FactoryGamePlay.COUNT_KEYS, gpi, gpm);
+        nameLevel = GamePlayFontFactory.getTypeFont(GamePlayFontFactory.NAME_LEVEL, gpi, gpm);
+        numberLevel = GamePlayFontFactory.getTypeFont(GamePlayFontFactory.NUMBER_LEVEL, gpi, gpm);
+        nameKeys = GamePlayFontFactory.getTypeFont(GamePlayFontFactory.NAME_KEYS, gpi, gpm);
+        countKeys = GamePlayFontFactory.getTypeFont(GamePlayFontFactory.COUNT_KEYS, gpi, gpm);
 
     }
 

@@ -157,16 +157,14 @@ public class SearchVariantTrees {
                         currentDirection = currentDirectionsAll.peekLast();  //извлекаем следующее направление из конца очереди
                                                                              //currentDirectionsAll, не удаляя его
                         nodes.add(new GridPoint2(human.x, human.y));
-                        //stack.pop();                              //удаляем верхний элемент из стека
                     } else {
+                        //несколько раз удаляем
                         for (int i = 0; i < count; i++){
-                            //несколько раз удаляем: 1) верх стека; 2) последние элементы currentDirictionAll; 3) последние элементы nodes
                             stack.pop();                        //удаляем верх стека
                             currentDirectionsAll.pollLast();    //удаляем в currentDirectionsAll последнее направление
                             nodes.pollLast();                   //удаляем последние элементы nodes
                         }
                         currentDirectionsAll.pollLast();    //удаляем последний элемент currentDirictionAll еще раз
-                        //nodes.pollLast();                   //удаляем последний элементы nodes еще раз
                         human = new GridPoint2(nodes.peekLast().x,
                                 nodes.peekLast().y);                   //задаем последние координаты человека в предыдущем узле
 
@@ -176,25 +174,12 @@ public class SearchVariantTrees {
 
                 } else {
                     stack.add(getQueueDirections());  //добавляем в стек очередь всех возможных вариантов ходов в этой узловой точке
-                    //если размер верхней очереди в стеке равен 1
-                    //if (stack.peek().size() == 1) {
-                    //    currentDirection = (Direction) stack.pop().pollFirst();  //возвращаем последнее направление из очереди, удаляя его и саму очередь
-                    //} else {
                     currentDirectionsAll.offer((Direction) stack.peek().peekFirst());    //добавляем в очередь текущей попытке направление по которому будем идти
                     currentDirection = (Direction) stack.peek().pollFirst(); //возвращаем последнее направление из очереди, удаляя его, но не удаляя саму очередь
-                    //}
                     nodes.add(new GridPoint2(human.x, human.y));
                 }
             }
-            System.out.println();
-            System.out.println("Before move:");
-            System.out.println(human.x + " " + human.y);
-            System.out.println(matrixLogic[human.x][human.y]);
             move(); //двигаемся человеком в текущем направлении
-            System.out.println("After move:");
-            System.out.println(human.x + " " + human.y);
-            System.out.println(matrixLogic[human.x][human.y]);
-            System.out.println(currentDirection.toString());
         }
 
         allVariants.offer(new ArrayDeque<Direction>(currentDirectionsAll));   //пихаем в allVariants последний правильный вариант направлений

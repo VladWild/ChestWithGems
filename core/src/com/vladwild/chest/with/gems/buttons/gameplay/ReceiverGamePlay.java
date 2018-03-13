@@ -16,9 +16,9 @@ import com.vladwild.chest.with.gems.resources.GamePlayManager;
 import com.vladwild.chest.with.gems.screens.Start;
 
 public class ReceiverGamePlay {
-    ChestWithGems game;
-    GamePlayInformation gpi;
-    GamePlayManager gpm;
+    private ChestWithGems game;
+    private GamePlayInformation gpi;
+    private GamePlayManager gpm;
 
     public ReceiverGamePlay(ChestWithGems game, GamePlayInformation gpi, GamePlayManager gpm) {
         this.gpi = gpi;
@@ -59,6 +59,8 @@ public class ReceiverGamePlay {
                         }, gpm.getButtonAtlas(), gpm.getButtonHomeUp(),
                 gpm.getButtonHomeDown(), gpi.getSizeButtons(), gpi.getTableSizeHome());
     }
+
+
 
     Stage getBack() {
         return getStage(new ClickListener() {

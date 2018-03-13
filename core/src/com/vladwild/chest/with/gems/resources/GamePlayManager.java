@@ -27,8 +27,6 @@ public class GamePlayManager extends ResourceManager {
     private static final String BUTTON_BACK_UP = "back_up";
     private static final String BUTTON_BACK_DOWN = "back_down";
 
-    private static final String FONT_LARGE = "font_large";
-
     public GamePlayManager() {
         super(PROPERTY_NAME);
     }
@@ -96,10 +94,6 @@ public class GamePlayManager extends ResourceManager {
 
     public String getButtonBackDown(){
         return BUTTON_BACK_DOWN;
-    }
-
-    public FileHandle getFontLarge(){
-        return getFileHandle(FONT_LARGE);
     }
 }
 

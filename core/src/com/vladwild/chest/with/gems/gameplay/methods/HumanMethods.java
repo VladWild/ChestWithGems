@@ -35,16 +35,6 @@ public class HumanMethods extends Human implements DynamicObjectMethods {
 
     @Override
     public boolean isNodePoint() {
-
-        //------------------------------------------------------------------------------
-        //System.out.println(matrixLogic[positionLogic.y][positionLogic.x]);
-
-        //System.out.println(matrixLogic[positionLogic.y + 1][positionLogic.x] && matrixLogic[positionLogic.y][positionLogic.x - 1]);
-        //System.out.println(matrixLogic[positionLogic.y][positionLogic.x + 1] && matrixLogic[positionLogic.y + 1][positionLogic.x]);
-        //System.out.println(matrixLogic[positionLogic.y - 1][positionLogic.x] && matrixLogic[positionLogic.y][positionLogic.x + 1]);
-        //System.out.println(matrixLogic[positionLogic.y][positionLogic.x - 1] && matrixLogic[positionLogic.y - 1][positionLogic.x]);
-        //------------------------------------------------------------------------------
-
         return (matrixLogic[positionLogic.y + 1][positionLogic.x] && matrixLogic[positionLogic.y][positionLogic.x - 1]) ||
                 (matrixLogic[positionLogic.y][positionLogic.x + 1] && matrixLogic[positionLogic.y + 1][positionLogic.x]) ||
                 (matrixLogic[positionLogic.y - 1][positionLogic.x] && matrixLogic[positionLogic.y][positionLogic.x + 1]) ||

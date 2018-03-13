@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.vladwild.chest.with.gems.location.GamePlayInformation;
 import com.vladwild.chest.with.gems.resources.GamePlayManager;
 
-public enum FactoryGamePlay {
+public enum GamePlayFontFactory {
     NAME_LEVEL {
         @Override
         protected BitmapFont getFont(){
@@ -44,7 +44,7 @@ public enum FactoryGamePlay {
 
     protected abstract BitmapFont getFont();
 
-    public static BitmapFont getTypeFont(FactoryGamePlay typeFont, GamePlayInformation gpiIn, GamePlayManager gpmIn){
+    public static BitmapFont getTypeFont(GamePlayFontFactory typeFont, GamePlayInformation gpiIn, GamePlayManager gpmIn){
         gpm = gpmIn;
         gpi = gpiIn;
         return typeFont.getFont();

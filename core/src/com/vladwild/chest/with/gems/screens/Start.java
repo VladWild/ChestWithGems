@@ -68,6 +68,8 @@ public class Start implements Screen {
         stages.add(is.getAuthor());
         stages.add(is.getExit());
 
+
+
         for (Stage stage : stages) {
             inputMultiplexer.addProcessor(stage);
         }

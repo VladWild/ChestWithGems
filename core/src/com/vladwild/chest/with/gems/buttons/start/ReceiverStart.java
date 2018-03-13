@@ -15,6 +15,7 @@ import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
 import com.vladwild.chest.with.gems.location.StartInformation;
 import com.vladwild.chest.with.gems.resources.StartManager;
 import com.vladwild.chest.with.gems.screens.GamePlay;
+import com.vladwild.chest.with.gems.screens.GamePlaySettings;
 import com.vladwild.chest.with.gems.screens.methods.SearchVariantTreesScreen;
 
 public class ReceiverStart {
@@ -56,7 +57,8 @@ public class ReceiverStart {
         return getStage(new ClickListener() {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
-                                game.setScreen(new GamePlay(game, 1, 8));
+                                //game.setScreen(new GamePlay(game, 1, 8));
+                                game.setScreen(new GamePlaySettings(game));
                             }
                         }, sm.getButtonAtlas(), sm.getButtonStartUp(), sm.getButtonStartDown(),
                 si.getSizeButtons(), si.getTableSizePlay());
@@ -66,7 +68,7 @@ public class ReceiverStart {
         return getStage(new ClickListener() {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
-                                game.setScreen(new SearchVariantTreesScreen(game, 3, 16, 2, true));
+                                game.setScreen(new SearchVariantTreesScreen(game, 2, 16, 6, true));
                             }
                         }, sm.getButtonAtlas(), sm.getButtonMethodsUp(), sm.getButtonMethodsDown(),
                 si.getSizeButtons(), si.getTableSizeMethods());
