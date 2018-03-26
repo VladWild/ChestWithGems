@@ -11,10 +11,9 @@ import com.vladwild.chest.with.gems.gameplay.StaticObject;
 import com.vladwild.chest.with.gems.gameplay.methods.DynamicObjectMethods;
 import com.vladwild.chest.with.gems.gameplay.methods.HumanMethods;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
-import com.vladwild.chest.with.gems.screens.GamePlay;
 import com.vladwild.chest.with.gems.methods.SearchVariantTrees;
+import com.vladwild.chest.with.gems.screens.GamePlay;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class SearchVariantTreesScreen extends GamePlay implements Screen{
@@ -39,9 +38,12 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
         if (all){
             deque = svt.function();
         } else {
-            deque = new ArrayDeque<Deque>();
-            deque.offer((Deque<Direction>) svt.function().getLast());
-            System.out.println(svt.function().size());
+            //deque = new ArrayDeque<Deque>();
+            //deque.offer((Deque<Direction>) svt.function().getLast());
+            //System.out.println(svt.function().size());
+            svt.function();
+            System.out.println("--------" + svt.getAllRigthVariants().size());
+            deque = svt.getAllRigthVariants();
         }
 
         humanMethods = new HumanMethods(gpi, gpm, field.getHumanPoint(), gmip, field.getMatrixLogic());
@@ -64,16 +66,20 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
     //движение человека по направлениям из очереди
     private void moveHumanMethods(){
         if(humanMethods.isNodePoint()){
-            if (deque.getFirst().size() != 0) {
-                currentDiriction = (Direction) deque.getFirst().pollFirst();
-                //humanMethods.move(currentDiriction, speed);
-            } else {
-                deque.pollFirst();
-                if (deque.size() != 0){
-                    humanMethods.setPositionLogic(startPositionLogic);
-                    humanMethods.setPositionPixel(startPositionPixel);
+            if(!deque.isEmpty()){
+                if (deque.getFirst().size() != 0) {
+                    currentDiriction = (Direction) deque.getFirst().pollFirst();
+                    //humanMethods.move(currentDiriction, speed);
+                } else {
+                    deque.pollFirst();
+                    if (deque.size() != 0){
+                        humanMethods.setPositionLogic(startPositionLogic);
+                        humanMethods.setPositionPixel(startPositionPixel);
+                    }
+                    System.out.println(++count);  //временно
+                    return;
                 }
-                System.out.println(++count);  //временно
+            } else {
                 return;
             }
         }
@@ -96,13 +102,13 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
 
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        if (!isEqualHumamMethodsChest()) {
+        //if (!isEqualHumamMethodsChest()) {
             if (humanMethods.isCenterLogicalSquare()){
                 moveHumanMethods();
             } else {
                 humanMethods.move(currentDiriction, speed);
             }
-        }
+        //}
 
         batch.begin();
         batch.draw(background, gpi.getBGRect().x, gpi.getBGRect().y, gpi.getBGRect().width, gpi.getBGRect().height);

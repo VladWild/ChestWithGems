@@ -58,6 +58,8 @@ public class ReceiverGamePlay {
                             }
                         }, gpm.getButtonAtlas(), gpm.getButtonHomeUp(),
                 gpm.getButtonHomeDown(), gpi.getSizeButtons(), gpi.getTableSizeHome());
+
+
     }
 
 

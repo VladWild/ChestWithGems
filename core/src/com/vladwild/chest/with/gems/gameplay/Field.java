@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.vladwild.chest.with.gems.location.GamePlayInformation;
 import com.vladwild.chest.with.gems.resources.GamePlayManager;
-import com.vladwild.chest.with.gems.utilityclasses.CreatingLevelTexture;
-import com.vladwild.chest.with.gems.utilityclasses.ReadMatrixFromCSVFile;
+import com.vladwild.chest.with.gems.utilities.CreatingLevelTexture;
+import com.vladwild.chest.with.gems.utilities.ReadMatrixFromCSVFile;
 
 import java.util.HashSet;
 import java.util.Set;

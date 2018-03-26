@@ -3,21 +3,11 @@ package com.vladwild.chest.with.gems.location;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
-abstract class Information {
-    private final Rectangle BACKGROUND;
+public abstract class Information {
+    protected final float WIDTH = (float) Gdx.graphics.getWidth();
+    protected final float HIGHT = (float) Gdx.graphics.getHeight();
 
-    protected final float WIDTH;
-    protected final float HIGHT;
-
-    protected Information(){
-        final float BACKGROUND_X0 = 0;
-        final float BACKGROUND_Y0 = 0;
-
-        WIDTH = (float) Gdx.graphics.getWidth();
-        HIGHT = (float) Gdx.graphics.getHeight();
-
-        BACKGROUND = new Rectangle(BACKGROUND_X0, BACKGROUND_Y0, WIDTH, HIGHT);
-    }
+    private final Rectangle BACKGROUND = new Rectangle(0, 0, WIDTH, HIGHT);
 
     public float getWidth(){
         return WIDTH;

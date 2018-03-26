@@ -3,12 +3,11 @@ package com.vladwild.chest.with.gems.methods;
 import com.badlogic.gdx.math.GridPoint2;
 import com.vladwild.chest.with.gems.gameplay.Direction;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Deque;
-import java.util.ArrayDeque;
 
 public class SearchVariantTrees {
     private boolean[][] matrixLogic;   //логическая матрица
@@ -24,6 +23,8 @@ public class SearchVariantTrees {
     private Stack<Deque> stack; //стек очередей всех возможных направлений в узловой точке
 
     private Deque<Deque> allVariants;              //очередь всех вариантов до лимита
+    private Deque<Deque> allRigthVariants;         //очередь правильных вариантов
+
     private Deque<Direction> currentDirectionsAll; //все текущие направления в одной попытке
 
     Direction currentDirection;
@@ -51,6 +52,8 @@ public class SearchVariantTrees {
         stack = new Stack<Deque>();
 
         allVariants = new ArrayDeque<Deque>();
+        allRigthVariants = new ArrayDeque<Deque>();
+
         currentDirectionsAll = new ArrayDeque<Direction>();
 
         nodes = new ArrayDeque<GridPoint2>();
@@ -69,14 +72,14 @@ public class SearchVariantTrees {
 
     //проверка на нахождение human в узловой точке
     private boolean isNodePoint(){
-        System.out.println();
-        System.out.println(human.x + " " + human.y);
-        System.out.println(matrixLogic[human.x][human.y]);
+        //System.out.println();
+        //System.out.println(human.x + " " + human.y);
+        //System.out.println(matrixLogic[human.x][human.y]);
 
-        System.out.println(matrixLogic[human.x + 1][human.y]);
-        System.out.println(matrixLogic[human.x][human.y + 1]);
-        System.out.println(matrixLogic[human.x - 1][human.y]);
-        System.out.println(matrixLogic[human.x][human.y - 1]);
+        //System.out.println(matrixLogic[human.x + 1][human.y]);
+        //System.out.println(matrixLogic[human.x][human.y + 1]);
+        //System.out.println(matrixLogic[human.x - 1][human.y]);
+        //System.out.println(matrixLogic[human.x][human.y - 1]);
 
         return (matrixLogic[human.x + 1][human.y] && matrixLogic[human.x][human.y - 1]) ||
                (matrixLogic[human.x][human.y + 1] && matrixLogic[human.x + 1][human.y]) ||
@@ -120,7 +123,7 @@ public class SearchVariantTrees {
         System.out.println("-----------------------");
         int count = 0;
         for (Deque<Direction> deque : stack) {
-            System.out.println(deque.size());
+            //System.out.println(deque.size());
             if (deque.size() == 0) {
                 count++;
             }
@@ -128,22 +131,31 @@ public class SearchVariantTrees {
                 count = 0;
             }
         }
-        System.out.println("-----------------------");
+        //System.out.println("-----------------------");
 
         return count;
+    }
+
+    public Deque<Deque> getAllRigthVariants(){
+        return allRigthVariants;
     }
 
     public Deque<Deque> function(){
         output();
         //while (countFindKeys != keys.size() && !human.equals(chest))
         //проверка - если если координаты человека не равны координатам сундука
-        while (!human.equals(chest)) {
+        //while (!human.equals(chest)) {
+        do {
             //если человек находится в узловой точке
             if (isNodePoint()) {
+
                 //если размер стека равен лимиту
                 if (stack.size() == limit){
                     allVariants.offer(new ArrayDeque<Direction>
                             (currentDirectionsAll));            //пихаем в allVariants этот вариант направлений
+
+                    if(human.equals(chest)) allRigthVariants.offer(new ArrayDeque<Direction>
+                            (currentDirectionsAll)); //пихаем в allRightVariants этот вариант направлений, если он привильный
 
                     int count = countNullDequesInStack();
                     if (count == 0){
@@ -180,8 +192,10 @@ public class SearchVariantTrees {
                 }
             }
             move(); //двигаемся человеком в текущем направлении
-        }
+            //System.out.println(allVariants.size());
+        } while (countNullDequesInStack() != stack.size());
 
+        //?
         allVariants.offer(new ArrayDeque<Direction>(currentDirectionsAll));   //пихаем в allVariants последний правильный вариант направлений
 
         return allVariants;

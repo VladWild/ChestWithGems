@@ -8,12 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.vladwild.chest.with.gems.buttons.start.Author;
-import com.vladwild.chest.with.gems.buttons.start.Exit;
-import com.vladwild.chest.with.gems.buttons.start.InvokerStart;
-import com.vladwild.chest.with.gems.buttons.start.Methods;
-import com.vladwild.chest.with.gems.buttons.start.Play;
-import com.vladwild.chest.with.gems.buttons.start.ReceiverStart;
+import com.vladwild.chest.with.gems.buttons.start.FactoryStartButtons;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
 import com.vladwild.chest.with.gems.location.StartInformation;
 import com.vladwild.chest.with.gems.resources.StartManager;
@@ -34,7 +29,7 @@ public class Start implements Screen {
     private Texture name;
     private Texture cheat;
 
-    private List<Stage> stages;
+    private List<Stage> buttons;
     private InputMultiplexer inputMultiplexer;
 
     public Start(ChestWithGems game){
@@ -51,29 +46,15 @@ public class Start implements Screen {
         name = new Texture(sm.getName());
         cheat = new Texture(sm.getCheat());
 
-        stages = new ArrayList<Stage>();
+        buttons = new ArrayList<Stage>();
         inputMultiplexer = new InputMultiplexer();
     }
 
     @Override
     public void show() {
-        ReceiverStart rs = new ReceiverStart(game, si, sm);
-        InvokerStart is = new InvokerStart(new Play(rs),
-                new Methods(rs),
-                new Author(rs),
-                new Exit(rs));
+        buttons.addAll(FactoryStartButtons.getButtons(game));
 
-        stages.add(is.getPlay());
-        stages.add(is.getMethods());
-        stages.add(is.getAuthor());
-        stages.add(is.getExit());
-
-
-
-        for (Stage stage : stages) {
-            inputMultiplexer.addProcessor(stage);
-        }
-
+        buttons.forEach(inputMultiplexer::addProcessor);
     }
 
     @Override
@@ -92,10 +73,7 @@ public class Start implements Screen {
         batch.draw(cheat, si.getCheatRect().x, si.getCheatRect().y, si.getCheatRect().width, si.getCheatRect().height);
         batch.end();
 
-        for (Stage stage : stages) {
-            stage.draw();
-        }
-
+        buttons.forEach(Stage::draw);
     }
 
     @Override

@@ -1,14 +1,16 @@
 package com.vladwild.chest.with.gems.fonts;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.vladwild.chest.with.gems.location.GamePlayInformation;
 import com.vladwild.chest.with.gems.resources.GamePlayManager;
 
+@Deprecated
 public enum GamePlayFontFactory {
     NAME_LEVEL {
         @Override
         protected BitmapFont getFont(){
-            BitmapFont font = new BitmapFont(gpm.getFontLarge());
+            BitmapFont font = new BitmapFont(new FileHandle("dscsdc"));
             font.setColor(gpi.getColor());
             font.getData().setScale(gpi.getSizeLevelName());
             return font;
@@ -16,7 +18,7 @@ public enum GamePlayFontFactory {
     }, NUMBER_LEVEL {
         @Override
         protected BitmapFont getFont(){
-            BitmapFont font = new BitmapFont(gpm.getFontLarge());
+            BitmapFont font = new BitmapFont(new FileHandle("dscsdc"));
             font.setColor(gpi.getColor());
             font.getData().setScale(gpi.getSizeLevelNumber());
             return font;
@@ -24,7 +26,7 @@ public enum GamePlayFontFactory {
     }, NAME_KEYS {
         @Override
         protected BitmapFont getFont(){
-            BitmapFont font = new BitmapFont(gpm.getFontLarge());
+            BitmapFont font = new BitmapFont(new FileHandle("dscsdc"));
             font.setColor(gpi.getColor());
             font.getData().setScale(gpi.getSizeKeysName());
             return font;
@@ -32,7 +34,7 @@ public enum GamePlayFontFactory {
     }, COUNT_KEYS {
         @Override
         protected BitmapFont getFont(){
-            BitmapFont font = new BitmapFont(gpm.getFontLarge());
+            BitmapFont font = new BitmapFont(new FileHandle("dscsdc"));
             font.setColor(gpi.getColor());
             font.getData().setScale(gpi.getSizeKeysCount());
             return font;

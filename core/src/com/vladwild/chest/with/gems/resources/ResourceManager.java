@@ -9,11 +9,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 abstract class ResourceManager {
-    protected final String PROPERTY_NAME;
+    protected String PROPERTY_NAME;
 
     private static final String BACKGROUND = "background";
-
-    private static final String FONT_LARGE = "font_large";
 
     protected ResourceManager(final String PROPERTY_NAME) {
         this.PROPERTY_NAME = PROPERTY_NAME;
@@ -47,9 +45,5 @@ abstract class ResourceManager {
 
     public String getBackground(){
         return getStringKey(BACKGROUND);
-    }
-
-    public FileHandle getFontLarge(){
-        return getFileHandle(FONT_LARGE);
     }
 }

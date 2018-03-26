@@ -6,21 +6,25 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.vladwild.chest.with.gems.buttons.gameplaysettings.*;
-import com.vladwild.chest.with.gems.buttons.gameplaysettings.Start;
-import com.vladwild.chest.with.gems.fonts.GamePlaySettingsFontFactory;
+import com.vladwild.chest.with.gems.buttons.gameplaysettings.FactoryGamePlaySettingsButtons;
+import com.vladwild.chest.with.gems.fonts.Director;
+import com.vladwild.chest.with.gems.fonts.Font;
+import com.vladwild.chest.with.gems.fonts.gameplaysettings.Level;
+import com.vladwild.chest.with.gems.fonts.gameplaysettings.LevelValue;
+import com.vladwild.chest.with.gems.fonts.gameplaysettings.Speed;
+import com.vladwild.chest.with.gems.fonts.gameplaysettings.SpeedValue;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
-import com.vladwild.chest.with.gems.location.GamePlaySettingsInformation;
+import com.vladwild.chest.with.gems.location.Information;
 import com.vladwild.chest.with.gems.resources.GamePlaySettingsManager;
+import com.vladwild.chest.with.gems.utilities.Converter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GamePlaySettings implements Screen {
-    private static final int COUNT_LEVEL = 3;
+    private static final int MAX_LEVEL = 3;
     private static final int MAX_SPEED = 128;
 
     private ChestWithGems game;
@@ -30,64 +34,50 @@ public class GamePlaySettings implements Screen {
 
     private Texture background;
 
-    private GamePlaySettingsInformation gpsi;
+    private Information info;
     private GamePlaySettingsManager gpsm;
 
-    private List<Stage> stages;
+    private List<Stage> buttons;
     private InputMultiplexer inputMultiplexer;
 
-    private int currentLevel;
-    private int currentSpeed;
+    private Converter<Integer, String> intToStr;
 
-    protected BitmapFont level;
-    protected BitmapFont numberLevel;
-    protected BitmapFont speed;
-    protected BitmapFont valueCurrentSpeed;
+    private int currentLevel = 1;
+    private int currentSpeed = 4;
+
+    private Font level;
+    private Font levelValue;
+    private Font speed;
+    private Font speedValue;
 
     public GamePlaySettings(ChestWithGems game){
         this.game = game;
         batch = game.getSpriteBatch();
 
-        gpsi = new GamePlaySettingsInformation();
+        info = new Information(){};
         gpsm = new GamePlaySettingsManager();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, gpsi.getWidth(), gpsi.getHight());
+        camera.setToOrtho(false, info.getWidth(), info.getHight());
 
         background = new Texture(gpsm.getBackground());
 
-        stages = new ArrayList<Stage>();
+        buttons = new ArrayList<Stage>();
         inputMultiplexer = new InputMultiplexer();
 
-        currentLevel = 1;
-        currentSpeed = 4;
+        intToStr = String::valueOf;
     }
 
     @Override
     public void show() {
-        ReceiverGamePlaySettings rgps = new ReceiverGamePlaySettings(game, this, gpsi, gpsm);
-        InvokerGamePlaySettings igps = new InvokerGamePlaySettings(new Start(rgps),
-                new LeftLevel(rgps),
-                new RightLevel(rgps),
-                new LeftSpeed(rgps),
-                new RightSpeed(rgps),
-                new Back(rgps));
+        buttons.addAll(FactoryGamePlaySettingsButtons.getButtons(game, this));
 
-        stages.add(igps.getStart());
-        stages.add(igps.getLeftLevel());
-        stages.add(igps.getRightLevel());
-        stages.add(igps.getLeftSpeed());
-        stages.add(igps.getRightSpeed());
-        stages.add(igps.getBack());
+        buttons.forEach(inputMultiplexer::addProcessor);
 
-        for (Stage stage : stages) {
-            inputMultiplexer.addProcessor(stage);
-        }
-
-        level = GamePlaySettingsFontFactory.getTypeFont(GamePlaySettingsFontFactory.LEVEL, gpsi, gpsm);
-        numberLevel = GamePlaySettingsFontFactory.getTypeFont(GamePlaySettingsFontFactory.NUMBER_LEVEL, gpsi, gpsm);
-        speed = GamePlaySettingsFontFactory.getTypeFont(GamePlaySettingsFontFactory.SPEED, gpsi, gpsm);
-        valueCurrentSpeed = GamePlaySettingsFontFactory.getTypeFont(GamePlaySettingsFontFactory.VALUE_CURRENT_SPEED, gpsi, gpsm);
+        level = Director.getFont(new Level());
+        levelValue = Director.getFont(new LevelValue());
+        speed = Director.getFont(new Speed());
+        speedValue = Director.getFont(new SpeedValue());
     }
 
     @Override
@@ -101,21 +91,18 @@ public class GamePlaySettings implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        batch.draw(background, gpsi.getBGRect().x, gpsi.getBGRect().y, gpsi.getBGRect().width, gpsi.getBGRect().height);
-        level.draw(batch, gpsi.getLevel(), gpsi.getPositionLevel().x - (gpsi.getLevel().length() * level.getSpaceWidth() / 2), gpsi.getPositionLevel().y);
-        numberLevel.draw(batch, String.valueOf(currentLevel), gpsi.getPositionNumberLevel().x - (String.valueOf(currentLevel).length() * numberLevel.getSpaceWidth() / 2), gpsi.getPositionNumberLevel().y);
-        speed.draw(batch, gpsi.getSpeed(), gpsi.getPositionSpeed().x - (gpsi.getSpeed().length() * speed.getSpaceWidth() / 2), gpsi.getPositionSpeed().y);
-        valueCurrentSpeed.draw(batch, String.valueOf(currentSpeed), gpsi.getPositionValueCurrentSpeed().x - (String.valueOf(currentSpeed).length() * valueCurrentSpeed.getSpaceWidth() / 2), gpsi.getPositionValueCurrentSpeed().y);
+        batch.draw(background, info.getBGRect().x, info.getBGRect().y, info.getBGRect().width, info.getBGRect().height);
+        level.draw(batch, level.getText(), level.getPosition().x, level.getPosition().y);
+        levelValue.draw(batch, intToStr.convert(currentLevel), speedValue.getCalculatedX(intToStr.convert(currentLevel)), levelValue.getPosition().y);
+        speed.draw(batch, speed.getText(), speed.getPosition().x, speed.getPosition().y);
+        speedValue.draw(batch, intToStr.convert(currentSpeed), speedValue.getCalculatedX(intToStr.convert(currentSpeed)), speedValue.getPosition().y);
         batch.end();
 
-        for (Stage stage : stages) {
-            stage.draw();
-        }
-
+        buttons.forEach(Stage::draw);
     }
 
-    public int getCountLevel(){
-        return COUNT_LEVEL;
+    public int getMaxLevel(){
+        return MAX_LEVEL;
     }
 
     public int getMaxSpeed(){

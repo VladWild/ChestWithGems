@@ -3,7 +3,7 @@ package com.vladwild.chest.with.gems.resources;
 import com.badlogic.gdx.files.FileHandle;
 
 public class GamePlayManager extends ResourceManager {
-    private static final String PROPERTY_NAME = "property\\gameplay.properties";
+    private static final String PROPERTY_NAME = "property\\screens.gameplay.properties";
 
     private static final String FIRST_LEVEL = "first_level";
     private static final String SECOND_LEVEL = "second_level";
