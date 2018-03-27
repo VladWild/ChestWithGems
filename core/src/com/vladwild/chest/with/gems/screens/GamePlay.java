@@ -58,12 +58,12 @@ public class GamePlay implements Screen {
     protected StaticObjectField field;
     private DynamicObject human;
     protected Set<StaticObject> keys;
-    private Iterator<StaticObject> iterKeys;
+    protected Iterator<StaticObject> iterKeys;
     protected StaticObject chest;
     protected StaticObject arrow;
 
     protected StringBuilder outCountAllKeys;
-    private final int countAllKeys;
+    protected final int countAllKeys;
 
     protected BitmapFont nameLevel;
     protected BitmapFont numberLevel;
@@ -133,14 +133,14 @@ public class GamePlay implements Screen {
         return !keys.isEmpty() && human.isCenterLogicalSquare();
     }
 
-    private void changeCountAllKeys(){
+    protected void changeCountAllKeys(){
         outCountAllKeys.delete(0, outCountAllKeys.length());
         outCountAllKeys.append(countAllKeys - keys.size());
         outCountAllKeys.append(gpi.getDelimiter());
         outCountAllKeys.append(countAllKeys);
     }
 
-    protected void removeKey(){
+    protected void removeKey(DynamicObject human){
         iterKeys = keys.iterator();
         while (iterKeys.hasNext()){
             if (human.getPositionPixel().equals(iterKeys.next().getPositionPixel())){
@@ -177,7 +177,7 @@ public class GamePlay implements Screen {
 
         human.move(gmip.getDirection(), speed);
 
-        if (isAttemptRemoveKey()) removeKey();
+        if (isAttemptRemoveKey()) removeKey(human);
 
         for (Stage stage : stages) {
             stage.draw();

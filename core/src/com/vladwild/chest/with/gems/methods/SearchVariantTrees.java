@@ -27,7 +27,7 @@ public class SearchVariantTrees {
 
     private Deque<Direction> currentDirectionsAll; //все текущие направления в одной попытке
 
-    Direction currentDirection;
+    private Direction currentDirection;
 
     private Deque<GridPoint2> nodes;  //последние координаты человека в узле
 
@@ -72,15 +72,6 @@ public class SearchVariantTrees {
 
     //проверка на нахождение human в узловой точке
     private boolean isNodePoint(){
-        //System.out.println();
-        //System.out.println(human.x + " " + human.y);
-        //System.out.println(matrixLogic[human.x][human.y]);
-
-        //System.out.println(matrixLogic[human.x + 1][human.y]);
-        //System.out.println(matrixLogic[human.x][human.y + 1]);
-        //System.out.println(matrixLogic[human.x - 1][human.y]);
-        //System.out.println(matrixLogic[human.x][human.y - 1]);
-
         return (matrixLogic[human.x + 1][human.y] && matrixLogic[human.x][human.y - 1]) ||
                (matrixLogic[human.x][human.y + 1] && matrixLogic[human.x + 1][human.y]) ||
                (matrixLogic[human.x - 1][human.y] && matrixLogic[human.x][human.y + 1]) ||
@@ -88,8 +79,13 @@ public class SearchVariantTrees {
     }
 
     //получение очереди всех возможных направлений относительно текущей узловой точки
-    private Deque<Direction> getQueueDirections(){
+    private Deque<Direction> getDirections(){
         Deque<Direction> directions = new ArrayDeque<Direction>();
+
+        System.out.println(matrixLogic[human.x + 1][human.y]);
+        System.out.println(matrixLogic[human.x][human.y + 1]);
+        System.out.println(matrixLogic[human.x - 1][human.y]);
+        System.out.println(matrixLogic[human.x][human.y - 1]);
 
         if(matrixLogic[human.x + 1][human.y]) directions.offer(Direction.DOWN);
         if(matrixLogic[human.x][human.y + 1]) directions.offer(Direction.RIGTH);
@@ -185,7 +181,7 @@ public class SearchVariantTrees {
                     }
 
                 } else {
-                    stack.add(getQueueDirections());  //добавляем в стек очередь всех возможных вариантов ходов в этой узловой точке
+                    stack.add(getDirections());  //добавляем в стек очередь всех возможных вариантов ходов в этой узловой точке
                     currentDirectionsAll.offer((Direction) stack.peek().peekFirst());    //добавляем в очередь текущей попытке направление по которому будем идти
                     currentDirection = (Direction) stack.peek().pollFirst(); //возвращаем последнее направление из очереди, удаляя его, но не удаляя саму очередь
                     nodes.add(new GridPoint2(human.x, human.y));

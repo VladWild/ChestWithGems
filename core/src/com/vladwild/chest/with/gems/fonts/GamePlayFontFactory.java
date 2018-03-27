@@ -10,7 +10,7 @@ public enum GamePlayFontFactory {
     NAME_LEVEL {
         @Override
         protected BitmapFont getFont(){
-            BitmapFont font = new BitmapFont(new FileHandle("dscsdc"));
+            BitmapFont font = new BitmapFont(new FileHandle("fonts\\exo-large.fnt"));
             font.setColor(gpi.getColor());
             font.getData().setScale(gpi.getSizeLevelName());
             return font;
@@ -18,7 +18,7 @@ public enum GamePlayFontFactory {
     }, NUMBER_LEVEL {
         @Override
         protected BitmapFont getFont(){
-            BitmapFont font = new BitmapFont(new FileHandle("dscsdc"));
+            BitmapFont font = new BitmapFont(new FileHandle("fonts\\exo-large.fnt"));
             font.setColor(gpi.getColor());
             font.getData().setScale(gpi.getSizeLevelNumber());
             return font;
@@ -26,7 +26,7 @@ public enum GamePlayFontFactory {
     }, NAME_KEYS {
         @Override
         protected BitmapFont getFont(){
-            BitmapFont font = new BitmapFont(new FileHandle("dscsdc"));
+            BitmapFont font = new BitmapFont(new FileHandle("fonts\\exo-large.fnt"));
             font.setColor(gpi.getColor());
             font.getData().setScale(gpi.getSizeKeysName());
             return font;
@@ -34,7 +34,7 @@ public enum GamePlayFontFactory {
     }, COUNT_KEYS {
         @Override
         protected BitmapFont getFont(){
-            BitmapFont font = new BitmapFont(new FileHandle("dscsdc"));
+            BitmapFont font = new BitmapFont(new FileHandle("fonts\\exo-large.fnt"));
             font.setColor(gpi.getColor());
             font.getData().setScale(gpi.getSizeKeysCount());
             return font;

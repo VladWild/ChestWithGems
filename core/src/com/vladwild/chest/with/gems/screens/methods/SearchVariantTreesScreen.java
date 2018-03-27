@@ -6,15 +6,22 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.vladwild.chest.with.gems.gameplay.Direction;
+import com.vladwild.chest.with.gems.gameplay.DynamicObject;
 import com.vladwild.chest.with.gems.gameplay.StaticObject;
 import com.vladwild.chest.with.gems.gameplay.methods.DynamicObjectMethods;
 import com.vladwild.chest.with.gems.gameplay.methods.HumanMethods;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
 import com.vladwild.chest.with.gems.methods.SearchVariantTrees;
+import com.vladwild.chest.with.gems.methods.searchwidth.AlgorithmSearchWidth;
+import com.vladwild.chest.with.gems.methods.searchwidth.Labyrinth;
+import com.vladwild.chest.with.gems.methods.searchwidth.Task;
 import com.vladwild.chest.with.gems.screens.GamePlay;
 
 import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SearchVariantTreesScreen extends GamePlay implements Screen{
     private Deque<Deque> deque;
@@ -29,6 +36,22 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
     private InputMultiplexer inputMultiplexer;
 
     private int count = 0; //временно
+
+    private Set<StaticObject> keysBuffer;
+
+    private StringBuilder outCountAllKeysBuffer;
+    private final StringBuilder CONST = new StringBuilder(outCountAllKeys);
+
+    @Override
+    protected void removeKey(DynamicObject human) {
+        iterKeys = keysBuffer.iterator();
+        while (iterKeys.hasNext()){
+            if (human.getPositionPixel().equals(iterKeys.next().getPositionPixel())){
+                iterKeys.remove();
+                changeCountAllKeys();
+            }
+        }
+    }
 
     public SearchVariantTreesScreen(ChestWithGems game, int level, int speed, int limit, boolean all) {
         super(game, level, speed);
@@ -52,6 +75,43 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
         startPositionPixel = new GridPoint2(humanMethods.getPositionPixel().x, humanMethods.getPositionPixel().y);
 
         inputMultiplexer = new InputMultiplexer();
+
+        keysBuffer = new HashSet<>(super.keys);
+
+        outCountAllKeysBuffer = new StringBuilder(CONST);
+    }
+
+    public SearchVariantTreesScreen(ChestWithGems game, int level, int speed, boolean all){
+        super(game, level, speed);
+
+        Task task = new Labyrinth(field.getMatrixLogic(), field.getHumanPoint(), field.getChestPoint(), field.getKeysPoints());
+        AlgorithmSearchWidth algorithmSearchWidth = new AlgorithmSearchWidth(task);
+        algorithmSearchWidth.function();
+
+        if (all){
+            deque = algorithmSearchWidth.getAllVariants();
+        } else {
+            deque = algorithmSearchWidth.getAllRigthVariants();
+        }
+
+        humanMethods = new HumanMethods(gpi, gpm, field.getHumanPoint(), gmip, field.getMatrixLogic());
+
+        startPositionLogic = new GridPoint2(humanMethods.getPositionLogic().x, humanMethods.getPositionLogic().y);
+        startPositionPixel = new GridPoint2(humanMethods.getPositionPixel().x, humanMethods.getPositionPixel().y);
+
+        inputMultiplexer = new InputMultiplexer();
+
+        keysBuffer = new HashSet<>(super.keys);
+
+        outCountAllKeysBuffer = new StringBuilder(CONST);
+    }
+
+    @Override
+    protected void changeCountAllKeys() {
+        outCountAllKeysBuffer.delete(0, outCountAllKeys.length());
+        outCountAllKeysBuffer.append(countAllKeys - keysBuffer.size());
+        outCountAllKeysBuffer.append(gpi.getDelimiter());
+        outCountAllKeysBuffer.append(countAllKeys);
     }
 
     @Override
@@ -77,6 +137,13 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
                         humanMethods.setPositionPixel(startPositionPixel);
                     }
                     System.out.println(++count);  //временно
+
+                    keysBuffer = new HashSet<>(super.keys);
+
+                    outCountAllKeysBuffer = new StringBuilder(CONST);
+                    System.out.println(outCountAllKeys.toString());
+
+                    humanMethods.move(Direction.STOP, 0);
                     return;
                 }
             } else {
@@ -113,7 +180,7 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
         batch.begin();
         batch.draw(background, gpi.getBGRect().x, gpi.getBGRect().y, gpi.getBGRect().width, gpi.getBGRect().height);
         batch.draw(field.getTexture(), field.getPositionPixel().x, field.getPositionPixel().y);
-        for (StaticObject key : keys) {
+        for (StaticObject key : keysBuffer) {
             batch.draw(key.getTexture(), key.getPositionPixel().x, gpi.getBlank() + key.getPositionPixel().y);
         }
         batch.draw(chest.getTexture(), chest.getPositionPixel().x, gpi.getBlank() + chest.getPositionPixel().y);
@@ -122,10 +189,10 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
         nameLevel.draw(batch, gpi.getLevel(), gpi.getPositionNameLevel().x, gpi.getPositionNameLevel().y);
         numberLevel.draw(batch, level, gpi.getPositionNumberLevel().x, gpi.getPositionNumberLevel().y);
         nameKeys.draw(batch, gpi.getKeys(), gpi.getPositionNameKeys().x, gpi.getPositionNameKeys().y);
-        countKeys.draw(batch, outCountAllKeys.toString(), gpi.getPositionCountKeys().x, gpi.getPositionCountKeys().y);
+        countKeys.draw(batch, outCountAllKeysBuffer.toString(), gpi.getPositionCountKeys().x, gpi.getPositionCountKeys().y);
         batch.end();
 
-        if (isAttemptRemoveKey()) removeKey();
+        if (isAttemptRemoveKey()) removeKey(humanMethods);
 
         for (Stage stage : stages) {
             stage.draw();
