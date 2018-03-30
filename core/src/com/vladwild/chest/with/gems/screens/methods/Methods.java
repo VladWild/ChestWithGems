@@ -13,18 +13,19 @@ import com.vladwild.chest.with.gems.gameplay.StaticObject;
 import com.vladwild.chest.with.gems.gameplay.methods.DynamicObjectMethods;
 import com.vladwild.chest.with.gems.gameplay.methods.HumanMethods;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
-import com.vladwild.chest.with.gems.methods.SearchVariantTrees;
-import com.vladwild.chest.with.gems.methods.searchwidth.AlgorithmSearchWidth;
-import com.vladwild.chest.with.gems.methods.searchwidth.Labyrinth;
-import com.vladwild.chest.with.gems.methods.searchwidth.Task;
+import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.Algorithm;
+import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.DeepStack;
+import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.WidthCopy;
+import com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth.All;
 import com.vladwild.chest.with.gems.screens.GamePlay;
 
-import java.util.Deque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class SearchVariantTreesScreen extends GamePlay implements Screen{
-    private Deque<Deque> deque;
+@Deprecated
+public class Methods extends GamePlay implements Screen{
+    private List<List> variants;
 
     private DynamicObjectMethods humanMethods;
 
@@ -53,21 +54,20 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
         }
     }
 
-    public SearchVariantTreesScreen(ChestWithGems game, int level, int speed, int limit, boolean all) {
+    public Methods(ChestWithGems game, int level, int speed, int limit, boolean all) {
         super(game, level, speed);
 
-        SearchVariantTrees svt = new SearchVariantTrees(field.getMatrixLogic(),
-                field.getHumanPoint(), field.getChestPoint(), field.getKeysPoints(), limit);
-        if (all){
-            deque = svt.function();
-        } else {
-            //deque = new ArrayDeque<Deque>();
-            //deque.offer((Deque<Direction>) svt.function().getLast());
-            //System.out.println(svt.function().size());
-            svt.function();
-            System.out.println("--------" + svt.getAllRigthVariants().size());
-            deque = svt.getAllRigthVariants();
-        }
+        /*
+        //Algorithm deepRecursion = new DeepRecursion(new All(field), limit);
+        //Algorithm deepRecursion = new DeepRecursion(new Right(field), limit);
+        Algorithm deepRecursion = new DeepRecursion(new Keys(field), limit);
+        deepRecursion.start();
+        variants = deepRecursion.getVariants();
+        */
+
+        Algorithm deepStack = new DeepStack(new All(field), limit);
+        deepStack.start();
+        variants = deepStack.getVariants();
 
         humanMethods = new HumanMethods(gpi, gpm, field.getHumanPoint(), gmip, field.getMatrixLogic());
 
@@ -81,18 +81,17 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
         outCountAllKeysBuffer = new StringBuilder(CONST);
     }
 
-    public SearchVariantTreesScreen(ChestWithGems game, int level, int speed, boolean all){
+    public Methods(ChestWithGems game, int level, int speed, boolean all){
         super(game, level, speed);
 
-        Task task = new Labyrinth(field.getMatrixLogic(), field.getHumanPoint(), field.getChestPoint(), field.getKeysPoints());
-        AlgorithmSearchWidth algorithmSearchWidth = new AlgorithmSearchWidth(task);
-        algorithmSearchWidth.function();
+        Algorithm widthCopy = new WidthCopy(new All(field));
+        //Algorithm widthCopy = new WidthCopy(new Right(field));
+        //Algorithm widthCopy = new WidthCopy(new Keys(field));
 
-        if (all){
-            deque = algorithmSearchWidth.getAllVariants();
-        } else {
-            deque = algorithmSearchWidth.getAllRigthVariants();
-        }
+        widthCopy.start();
+        variants = widthCopy.getVariants();
+
+
 
         humanMethods = new HumanMethods(gpi, gpm, field.getHumanPoint(), gmip, field.getMatrixLogic());
 
@@ -126,13 +125,14 @@ public class SearchVariantTreesScreen extends GamePlay implements Screen{
     //движение человека по направлениям из очереди
     private void moveHumanMethods(){
         if(humanMethods.isNodePoint()){
-            if(!deque.isEmpty()){
-                if (deque.getFirst().size() != 0) {
-                    currentDiriction = (Direction) deque.getFirst().pollFirst();
+            if(!variants.isEmpty()){
+                if (variants.get(0).size() != 0) {
+                    currentDiriction = (Direction) variants.get(0).get(0);
+                    variants.get(0).remove(0);
                     //humanMethods.move(currentDiriction, speed);
                 } else {
-                    deque.pollFirst();
-                    if (deque.size() != 0){
+                    variants.remove(0);
+                    if (variants.size() != 0){
                         humanMethods.setPositionLogic(startPositionLogic);
                         humanMethods.setPositionPixel(startPositionPixel);
                     }

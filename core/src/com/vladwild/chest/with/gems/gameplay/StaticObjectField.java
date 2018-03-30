@@ -10,5 +10,6 @@ public interface StaticObjectField extends StaticObject{
     GridPoint2 getChestPoint();
 
     boolean[][] getMatrixLogic();
+    boolean[][] getReverseMatrix();
 }
 

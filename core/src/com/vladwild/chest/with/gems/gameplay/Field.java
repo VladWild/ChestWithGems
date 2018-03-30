@@ -10,7 +10,7 @@ import com.vladwild.chest.with.gems.utilities.ReadMatrixFromCSVFile;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Field implements StaticObjectField{
+public class Field implements StaticObjectField {
     private int[][] matrix;
     private boolean[][] matrixLogic;
     private Texture texture;
@@ -20,7 +20,7 @@ public class Field implements StaticObjectField{
     private GridPoint2 humanPoint;
     private GridPoint2 chestPoint;
 
-    public Field(GamePlayInformation gpi, GamePlayManager gpm, int level){
+    public Field(GamePlayInformation gpi, GamePlayManager gpm, int level) {
         matrix = ReadMatrixFromCSVFile.getMatrix(gpi, gpm, level);
         texture = CreatingLevelTexture.getTexture(gpi, gpm, matrix);
 
@@ -30,7 +30,7 @@ public class Field implements StaticObjectField{
         createMatrixLogic(gpi);
     }
 
-    private void pointsObject(GamePlayInformation gpi){
+    private void pointsObject(GamePlayInformation gpi) {
         keysPoints = new HashSet<GridPoint2>();
 
         for (int i = 0; i < gpi.getLogicSizeField().x; i++) {
@@ -42,7 +42,7 @@ public class Field implements StaticObjectField{
         }
     }
 
-    private void createMatrixLogic(GamePlayInformation gpi){
+    private void createMatrixLogic(GamePlayInformation gpi) {
         matrixLogic = new boolean[gpi.getLogicSizeField().x][gpi.getLogicSizeField().y];
 
         for (int i = 0; i < gpi.getLogicSizeField().x; i++) {
@@ -54,12 +54,23 @@ public class Field implements StaticObjectField{
     }
 
     @Override
-    public Texture getTexture(){
+    public boolean[][] getReverseMatrix() {
+        boolean[][] reverseMatrix = new boolean[matrixLogic.length][matrixLogic[0].length];
+
+        for (int i = 0; i < matrixLogic.length; i++) {
+            reverseMatrix[(matrixLogic.length - 1) - i] = matrixLogic[i];
+        }
+
+        return reverseMatrix;
+    }
+
+    @Override
+    public Texture getTexture() {
         return texture;
     }
 
     @Override
-    public GridPoint2 getPositionPixel(){
+    public GridPoint2 getPositionPixel() {
         return positionPixel;
     }
 
@@ -79,7 +90,7 @@ public class Field implements StaticObjectField{
     }
 
     @Override
-    public boolean[][] getMatrixLogic(){
+    public boolean[][] getMatrixLogic() {
         return matrixLogic;
     }
 }
