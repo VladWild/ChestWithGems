@@ -16,7 +16,6 @@ import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
 import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.Algorithm;
 import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.DeepStack;
 import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.WidthLink;
-import com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth.All;
 import com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth.Keys;
 import com.vladwild.chest.with.gems.screens.GamePlay;
 
@@ -37,7 +36,7 @@ public class Methods2 extends GamePlay implements Screen{
 
     private InputMultiplexer inputMultiplexer;
 
-    private int count = 0; //временно
+    private int count = 0;          //временно
 
     private Set<StaticObject> keysBuffer;
 
@@ -55,7 +54,7 @@ public class Methods2 extends GamePlay implements Screen{
         }
     }
 
-    public Methods2(ChestWithGems game, int level, int speed, int limit, boolean all) {
+    public Methods2(ChestWithGems game, int level, int speed, int limit) {
         super(game, level, speed);
 
         /*
@@ -66,7 +65,10 @@ public class Methods2 extends GamePlay implements Screen{
         variants = deepRecursion.getVariants();
         */
 
-        Algorithm deepStack = new DeepStack(new All(field), limit);
+
+        //Algorithm deepStack = new DeepStack(new All(field), limit);
+        //Algorithm deepStack = new DeepStack(new Right(field), limit);
+        Algorithm deepStack = new DeepStack(new Keys(field), limit);
         deepStack.start();
         variants = deepStack.getVariants();
 
@@ -82,7 +84,7 @@ public class Methods2 extends GamePlay implements Screen{
         outCountAllKeysBuffer = new StringBuilder(CONST);
     }
 
-    public Methods2(ChestWithGems game, int level, int speed, boolean all){
+    public Methods2(ChestWithGems game, int level, int speed){
         super(game, level, speed);
 
         /*
@@ -93,7 +95,6 @@ public class Methods2 extends GamePlay implements Screen{
         widthCopy.start();
         variants = widthCopy.getVariants();
         */
-
 
         //Algorithm widthLink = new WidthLink(new All(field));
         //Algorithm widthLink = new WidthLink(new Right(field));

@@ -3,7 +3,9 @@ package com.vladwild.chest.with.gems.methods.deepwidth.algorithms;
 import com.vladwild.chest.with.gems.methods.deepwidth.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class DeepStack implements Algorithm{
     private Task task;       //задача
@@ -16,29 +18,31 @@ public class DeepStack implements Algorithm{
 
     @Override
     public void start() {
-        List<List> variants = new ArrayList<>();     //все возможные варианты ветвей
-        List<List> stack = new ArrayList<>();        //список всех вариантов до лимита
+        Stack<List> stack = new Stack<>();           //список всех вариантов до лимита
         List branch = new ArrayList();               //текущая ветка дерева
 
-        stack.add(task.getElements(new ArrayList<>()));
+        stack.push(task.getElements(null));
 
         do{
-            if (stack.size() == limit){
-                variants.add(branch);
-
+            if (!stack.peek().isEmpty()){
+                if (stack.size() < limit) {
+                    branch.add(stack.peek().remove(0));
+                    stack.push(new LinkedList(task.getElements(branch)));
+                } else {
+                    branch.add(stack.peek().remove(0));
+                    task.save(branch);
+                    branch = new ArrayList(branch);
+                    branch.remove(branch.size() - 1);
+                }
             } else {
-                branch.add(stack.get(stack.size() - 1).get(0));
-                stack.get(stack.size() - 1).remove(0);
-                stack.add(task.getElements(branch));
+                stack.pop();
+                if (!branch.isEmpty()) branch.remove(branch.size() - 1);
             }
-
-        } while (!stack.isEmpty());
-
-
+        } while (!stack.empty());
     }
 
     @Override
     public List<List> getVariants() {
-        return null;
+        return task.getRequiredElements();
     }
 }

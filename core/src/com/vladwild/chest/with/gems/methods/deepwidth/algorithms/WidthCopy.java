@@ -17,7 +17,7 @@ public class WidthCopy implements Algorithm {
         List<List> variants = new ArrayList<>();         //список всех вариантов до лимита
         boolean end = false;                             //флаг окончания работы цикла
 
-        for (Object element : task.getElements(variants)) {
+        for (Object element : task.getElements(null)) {
             List elements = new ArrayList();
             elements.add(element);
             variants.add(elements);

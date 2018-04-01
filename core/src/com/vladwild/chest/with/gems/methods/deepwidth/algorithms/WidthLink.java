@@ -18,7 +18,7 @@ public class WidthLink implements Algorithm{
         List<Node> nodes = new ArrayList<>();
         boolean end = false;
 
-        for (Object element : task.getElements(nodes)) {   //?
+        for (Object element : task.getElements(null)) {   //?
             nodes.add(new Node<>(null, element));
         }
 

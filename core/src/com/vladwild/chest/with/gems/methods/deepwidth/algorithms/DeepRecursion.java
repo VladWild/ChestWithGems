@@ -1,7 +1,6 @@
 package com.vladwild.chest.with.gems.methods.deepwidth.algorithms;
 
 import com.vladwild.chest.with.gems.methods.deepwidth.tasks.Task;
-import com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth.All;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +9,7 @@ public class DeepRecursion implements Algorithm {
     private Task task;       //задача
     private int limit;       //глубина
 
-    private List<List> variants = new ArrayList<>();         //список всех вариантов до лимита
-    private List elements = new ArrayList<>();               //список текущих элементов
+    private List elements = new ArrayList<>();            //список текущих элементов
 
     public DeepRecursion(Task task, int limit) {
         this.task = task;
@@ -30,29 +28,20 @@ public class DeepRecursion implements Algorithm {
             }
             if (!elements.isEmpty()) elements.remove(elements.size() - 1);
         } else {
-            variants.add(elements);
+            task.save(elements);
 
             elements = new ArrayList(elements);
             elements.remove(elements.size() - 1);
         }
     }
 
-    private boolean taskIsAll(){
-        return task instanceof All;
-    }
-
     @Override
     public void start() {
-        function(task.getElements(new ArrayList<>()));
-
-        if (!taskIsAll()) {
-            task.save(variants);
-            variants = task.getRequiredElements();
-        }
+        function(task.getElements(null));
     }
 
     @Override
     public List<List> getVariants() {
-        return variants;
+        return task.getRequiredElements();
     }
 }

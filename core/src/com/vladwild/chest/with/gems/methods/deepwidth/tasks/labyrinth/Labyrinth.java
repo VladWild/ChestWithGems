@@ -81,7 +81,7 @@ public abstract class Labyrinth implements Task {
 
     @Override
     public List<?> getElements(List<?> elements) {
-        if (elements.isEmpty()) return getDirections();     //если элементов нет, то возвращаем список направлений относительно текущего положения человека
+        if (elements == null) return getDirections();     //если элементов нет, то возвращаем список направлений относительно текущего положения человека
 
         List<Direction> directions = new ArrayList<>((List<Direction>) elements);  //конвертируем элементы направлений, создавая список этих направлений
         human = new GridPoint2(START_HUMAN);                //присваиваем стартовые координаты человека
