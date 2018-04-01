@@ -15,8 +15,9 @@ import com.vladwild.chest.with.gems.gameplay.methods.HumanMethods;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
 import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.Algorithm;
 import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.DeepStack;
-import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.WidthCopy;
+import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.WidthLink;
 import com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth.All;
+import com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth.Keys;
 import com.vladwild.chest.with.gems.screens.GamePlay;
 
 import java.util.HashSet;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 @Deprecated
-public class Methods extends GamePlay implements Screen{
+public class Methods2 extends GamePlay implements Screen{
     private List<List> variants;
 
     private DynamicObjectMethods humanMethods;
@@ -54,7 +55,7 @@ public class Methods extends GamePlay implements Screen{
         }
     }
 
-    public Methods(ChestWithGems game, int level, int speed, int limit, boolean all) {
+    public Methods2(ChestWithGems game, int level, int speed, int limit, boolean all) {
         super(game, level, speed);
 
         /*
@@ -81,17 +82,25 @@ public class Methods extends GamePlay implements Screen{
         outCountAllKeysBuffer = new StringBuilder(CONST);
     }
 
-    public Methods(ChestWithGems game, int level, int speed, boolean all){
+    public Methods2(ChestWithGems game, int level, int speed, boolean all){
         super(game, level, speed);
 
-        Algorithm widthCopy = new WidthCopy(new All(field));
+        /*
+        //Algorithm widthCopy = new WidthCopy(new All(field));
         //Algorithm widthCopy = new WidthCopy(new Right(field));
-        //Algorithm widthCopy = new WidthCopy(new Keys(field));
+        Algorithm widthCopy = new WidthCopy(new Keys(field));
 
         widthCopy.start();
         variants = widthCopy.getVariants();
+        */
 
 
+        //Algorithm widthLink = new WidthLink(new All(field));
+        //Algorithm widthLink = new WidthLink(new Right(field));
+        Algorithm widthLink = new WidthLink(new Keys(field));
+
+        widthLink.start();
+        variants = widthLink.getVariants();
 
         humanMethods = new HumanMethods(gpi, gpm, field.getHumanPoint(), gmip, field.getMatrixLogic());
 
@@ -136,12 +145,11 @@ public class Methods extends GamePlay implements Screen{
                         humanMethods.setPositionLogic(startPositionLogic);
                         humanMethods.setPositionPixel(startPositionPixel);
                     }
-                    System.out.println(++count);  //временно
+                    System.out.println(++count);  //количество итераций
 
                     keysBuffer = new HashSet<>(super.keys);
 
                     outCountAllKeysBuffer = new StringBuilder(CONST);
-                    System.out.println(outCountAllKeys.toString());
 
                     humanMethods.move(Direction.STOP, 0);
                     return;

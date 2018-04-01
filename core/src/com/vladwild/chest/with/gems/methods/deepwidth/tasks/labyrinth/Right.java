@@ -7,36 +7,22 @@ import com.vladwild.chest.with.gems.gameplay.StaticObjectField;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Right extends Labyrinth{
+public class Right extends Labyrinth {
 
     public Right(StaticObjectField field) {
         super(field);
     }
 
     @Override
-    public boolean isEnd(List<List> lists) {
-        rightWays = new ArrayList<>();
+    public void save(List<?> list) {
+        List<Direction> directions = new ArrayList<>((List<Direction>) list);
 
-        for (List list : lists) {
-            List<Direction> directions = new ArrayList<Direction>((List<Direction>) list);
+        human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
 
-            human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
-            for (Direction direction : directions) {    //ходим на каждой итерации до тех пор, пока не попадем в узел
-                do{
-                    move(direction);
-                } while (!isNodePoint());
-
-                if (human.equals(chest)) {
-                    rightWays.add(directions);     //добавляем правильный вариант направлений
-                }
-            }
-        }
-
-        return rightWays.isEmpty();
+        directions.forEach(direction -> {
+            walk(direction);
+            if (human.equals(chest)) ways.add(directions);
+        });
     }
 
-    @Override
-    public List<List> getRequiredElements() {
-        return rightWays;
-    }
 }

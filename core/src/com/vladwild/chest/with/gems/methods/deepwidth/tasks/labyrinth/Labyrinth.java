@@ -6,38 +6,36 @@ import com.vladwild.chest.with.gems.gameplay.StaticObjectField;
 import com.vladwild.chest.with.gems.methods.deepwidth.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public abstract class Labyrinth implements Task{
-    protected boolean[][] matrixLogic;        //логическая матрица
+public abstract class Labyrinth implements Task {
+    protected boolean[][] matrixLogic;                  //логическая матрица
 
-    protected final GridPoint2 START_HUMAN;   //координаты человека при старте игры
-    protected GridPoint2 human;               //координаты человека
-    protected GridPoint2 chest;               //координаты сундука
-    protected Set<GridPoint2> keys;           //координаты ключей
+    protected final GridPoint2 START_HUMAN;             //координаты человека при старте игры
+    protected GridPoint2 human;                         //координаты человека
+    protected GridPoint2 chest;                         //координаты сундука
 
-    protected List<List> allWays;             //все варианты направлений
-    protected List<List> rightWays;           //все требуемые варианты направлений
+    protected List<List> ways = new ArrayList<>();      //все требеумые варианты направлений
 
-    protected Labyrinth(StaticObjectField field){
+    protected Labyrinth(StaticObjectField field) {
         matrixLogic = field.getReverseMatrix();
-
-        START_HUMAN = new GridPoint2(matrixLogic[0].length - field.getHumanPoint().y - 1,
-                field.getHumanPoint().x);
-
+        START_HUMAN = new GridPoint2(getX(field.getHumanPoint()), getY(field.getHumanPoint()));
         human = new GridPoint2(START_HUMAN);
-        chest = new GridPoint2(matrixLogic[0].length - field.getChestPoint().y - 1,
-                field.getChestPoint().x);
-        keys = new HashSet<>();
-        for (GridPoint2 key : field.getKeysPoints()) {
-            keys.add(new GridPoint2(matrixLogic[0].length - key.y - 1, key.x));
-        }
+        chest = new GridPoint2(getX(field.getChestPoint()), getY(field.getChestPoint()));
+    }
+
+    //новый x
+    protected int getX(GridPoint2 point) {
+        return matrixLogic[0].length - point.y - 1;
+    }
+
+    //новый y
+    protected int getY(GridPoint2 point) {
+        return point.x;
     }
 
     //проверка на нахождение human в узловой точке
-    protected boolean isNodePoint(){
+    protected boolean isNodePoint() {
         return (matrixLogic[human.x + 1][human.y] && matrixLogic[human.x][human.y - 1]) ||
                 (matrixLogic[human.x][human.y + 1] && matrixLogic[human.x + 1][human.y]) ||
                 (matrixLogic[human.x - 1][human.y] && matrixLogic[human.x][human.y + 1]) ||
@@ -45,20 +43,20 @@ public abstract class Labyrinth implements Task{
     }
 
     //получение списка всех возможных направлений относительно текущей узловой точки
-    protected List<Direction> getDirections(){
+    protected List<Direction> getDirections() {
         List<Direction> directions = new ArrayList<>();
 
-        if(matrixLogic[human.x + 1][human.y]) directions.add(Direction.DOWN);
-        if(matrixLogic[human.x][human.y + 1]) directions.add(Direction.RIGTH);
-        if(matrixLogic[human.x - 1][human.y]) directions.add(Direction.UP);
-        if(matrixLogic[human.x][human.y - 1]) directions.add(Direction.LEFT);
+        if (matrixLogic[human.x + 1][human.y]) directions.add(Direction.DOWN);
+        if (matrixLogic[human.x][human.y + 1]) directions.add(Direction.RIGTH);
+        if (matrixLogic[human.x - 1][human.y]) directions.add(Direction.UP);
+        if (matrixLogic[human.x][human.y - 1]) directions.add(Direction.LEFT);
 
         return directions;
     }
 
     //движение человкка по направлению
-    protected void move(Direction direction){
-        switch (direction){
+    protected void move(Direction direction) {
+        switch (direction) {
             case DOWN:
                 human.x++;
                 break;
@@ -74,20 +72,38 @@ public abstract class Labyrinth implements Task{
         }
     }
 
+    //гуляем от текущей точки человека до следующей узловой
+    protected void walk(Direction direction) {
+        do {
+            move(direction);
+        } while (!isNodePoint());
+    }
+
     @Override
-    public List<?> getElements(List<?> list) {
-        if(list.isEmpty()) return getDirections();
+    public List<?> getElements(List<?> elements) {
+        if (elements.isEmpty()) return getDirections();     //если элементов нет, то возвращаем список направлений относительно текущего положения человека
 
-        List<Direction> directions = new ArrayList<Direction>((List<Direction>) list);
-
-        human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
-
-        for (Direction direction : directions) {   //ходим на каждой итерации до тех пор, пока не попадем в узел
-            do{
-                move(direction);
-            } while (!isNodePoint());
-        }
+        List<Direction> directions = new ArrayList<>((List<Direction>) elements);  //конвертируем элементы направлений, создавая список этих направлений
+        human = new GridPoint2(START_HUMAN);                //присваиваем стартовые координаты человека
+        directions.forEach(this::walk);                     //пробегаем весь путь на текущем списке направлений
 
         return getDirections();
     }
+
+    @Override
+    public boolean isEnd(List<?> list) {
+        List<Direction> directions = new ArrayList<Direction>((List<Direction>) list);
+
+        human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
+        directions.forEach(this::walk);             //пробегаем этот вариант направлений
+
+        return human.equals(chest);
+    }
+
+    @Override
+    public List<List> getRequiredElements() {
+        return ways;
+    }
 }
+
+

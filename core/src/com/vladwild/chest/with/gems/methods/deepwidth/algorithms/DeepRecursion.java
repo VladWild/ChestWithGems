@@ -46,7 +46,7 @@ public class DeepRecursion implements Algorithm {
         function(task.getElements(new ArrayList<>()));
 
         if (!taskIsAll()) {
-            task.isEnd(variants);
+            task.save(variants);
             variants = task.getRequiredElements();
         }
     }

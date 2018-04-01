@@ -9,45 +9,49 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Keys extends Labyrinth{
+public class Keys extends Labyrinth {
+    private Set<GridPoint2> keys = new HashSet<>();         //координаты ключей
+    private Set<GridPoint2> keysBuffer;                     //буфер координат ключей
 
     public Keys(StaticObjectField field) {
         super(field);
+
+        field.getKeysPoints().forEach(key -> keys.add(new GridPoint2(getX(key), getY(key))));
+        keysBuffer = new HashSet<>(keys);
     }
 
     @Override
-    public boolean isEnd(List<List> lists) {
-        rightWays = new ArrayList<>();
-
-        Set<GridPoint2> keyBuffer = new HashSet<>(keys);
-
-        for (List list : lists) {
-            List<Direction> directions = new ArrayList<Direction>((List<Direction>) list);
-
-            human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
-
-            for (Direction direction : directions) {    //ходим на каждой итерации до тех пор, пока не попадем в узел
-                do{
-                    move(direction);
-                    for (GridPoint2 key : keys){
-                        if (human.equals(key)) {
-                            keyBuffer.remove(key);
-                        }
-                    }
-                } while (!isNodePoint());
-
-                if (human.equals(chest) && keyBuffer.isEmpty()) {
-                    rightWays.add(directions);      //добавляем правильный вариант
-                }
-            }
-            keyBuffer = new HashSet<>(keys);
-        }
-
-        return rightWays.isEmpty();
+    protected void walk(Direction direction) {
+        do {
+            move(direction);
+            keys.forEach(key -> {
+                if (human.equals(key)) keysBuffer.remove(key);
+            });
+        } while (!isNodePoint());
     }
 
     @Override
-    public List<List> getRequiredElements() {
-        return rightWays;
+    public boolean isEnd(List<?> list) {
+        List<Direction> directions = new ArrayList<Direction>((List<Direction>) list);
+
+        keysBuffer = new HashSet<>(keys);
+
+        human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
+        directions.forEach(this::walk);             //пробегаем этот вариант направлений
+
+        return human.equals(chest) && keysBuffer.isEmpty();
+    }
+
+    @Override
+    public void save(List<?> list) {
+        List<Direction> directions = new ArrayList<>((List<Direction>) list);
+
+        human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
+        keysBuffer = new HashSet<>(keys);
+
+        directions.forEach(direction -> {
+            walk(direction);
+            if (human.equals(chest) && keysBuffer.isEmpty()) ways.add(directions);      //добавляем правильный вариант
+        });
     }
 }

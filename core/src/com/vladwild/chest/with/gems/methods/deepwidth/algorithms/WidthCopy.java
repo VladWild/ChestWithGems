@@ -15,7 +15,7 @@ public class WidthCopy implements Algorithm {
     @Override
     public void start() {
         List<List> variants = new ArrayList<>();         //список всех вариантов до лимита
-        List<List> variantsBuffer = new ArrayList<>();   //буффер
+        boolean end = false;                             //флаг окончания работы цикла
 
         for (Object element : task.getElements(variants)) {
             List elements = new ArrayList();
@@ -23,11 +23,11 @@ public class WidthCopy implements Algorithm {
             variants.add(elements);
         }
 
-        variantsBuffer = new ArrayList<>(variants);
+        List<List> variantsBuffer = new ArrayList<>(variants);  //буффер
 
         do {
             int i = 0;                                 //номер списка на текущем уровне
-            for (List list : variants) {                //проходимся по всем спискам элементов
+            for (List list : variants) {               //проходимся по всем спискам элементов
                 boolean one = true;                    //флаг элемента
                 for (Object element : task.getElements(list)) {       //берем все дочернии элементы последнего элемента нашего текущего списка
                     if (one) {                                        //если элемент один
@@ -43,8 +43,16 @@ public class WidthCopy implements Algorithm {
                     }
                 }
             }
-            variants = new ArrayList<>(variantsBuffer);    //заносим все списки из буффера в allVariantsDirections
-        } while (task.isEnd(variants));
+            variants = new ArrayList<>(variantsBuffer);    //заносим все списки из буффера в variants
+            for (List variant : variants) {
+                if (task.isEnd(variant)) {
+                    end = true;
+                    break;
+                }
+            }
+        } while (!end);
+
+        variants.forEach(task::save);    //сохраняем список вариантов
     }
 
     @Override

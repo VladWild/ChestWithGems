@@ -6,7 +6,8 @@ public interface Task {
     List<?> getElements(List<?> list);
     List<List> getRequiredElements();
 
-    boolean isEnd(List<List> lists);
+    void save(List<?> list);
+    boolean isEnd(List<?> list);
 }
 
 
