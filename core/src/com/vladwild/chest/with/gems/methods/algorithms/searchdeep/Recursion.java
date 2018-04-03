@@ -1,18 +1,19 @@
-package com.vladwild.chest.with.gems.methods.deepwidth.algorithms;
+package com.vladwild.chest.with.gems.methods.algorithms.searchdeep;
 
-import com.vladwild.chest.with.gems.methods.deepwidth.tasks.Task;
+import com.vladwild.chest.with.gems.methods.algorithms.Algorithm;
+import com.vladwild.chest.with.gems.methods.tasks.SearchDeep;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeepRecursion implements Algorithm {
-    private Task task;       //задача
+public class Recursion implements Algorithm {
+    private SearchDeep deep;       //задача
     private int limit;       //глубина
 
     private List elements = new ArrayList<>();            //список текущих элементов
 
-    public DeepRecursion(Task task, int limit) {
-        this.task = task;
+    public Recursion(SearchDeep deep, int limit) {
+        this.deep = deep;
         this.limit = limit;
     }
 
@@ -24,11 +25,11 @@ public class DeepRecursion implements Algorithm {
         if (!isLimit()) {
             for (Object element : list){
                 elements.add(element);
-                function(task.getElements(elements));
+                function(deep.getElements(elements));
             }
             if (!elements.isEmpty()) elements.remove(elements.size() - 1);
         } else {
-            task.save(elements);
+            deep.save(elements);
 
             elements = new ArrayList(elements);
             elements.remove(elements.size() - 1);
@@ -37,11 +38,11 @@ public class DeepRecursion implements Algorithm {
 
     @Override
     public void start() {
-        function(task.getElements(null));
+        function(deep.getElements(null));
     }
 
     @Override
     public List<List> getVariants() {
-        return task.getRequiredElements();
+        return deep.getRequiredElements();
     }
 }

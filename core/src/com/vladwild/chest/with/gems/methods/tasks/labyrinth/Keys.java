@@ -1,4 +1,4 @@
-package com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth;
+package com.vladwild.chest.with.gems.methods.tasks.labyrinth;
 
 import com.badlogic.gdx.math.GridPoint2;
 import com.vladwild.chest.with.gems.gameplay.Direction;

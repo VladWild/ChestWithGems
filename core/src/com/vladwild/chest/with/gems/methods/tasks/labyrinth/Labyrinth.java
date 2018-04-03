@@ -1,14 +1,14 @@
-package com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth;
+package com.vladwild.chest.with.gems.methods.tasks.labyrinth;
 
 import com.badlogic.gdx.math.GridPoint2;
 import com.vladwild.chest.with.gems.gameplay.Direction;
 import com.vladwild.chest.with.gems.gameplay.StaticObjectField;
-import com.vladwild.chest.with.gems.methods.deepwidth.tasks.Task;
+import com.vladwild.chest.with.gems.methods.tasks.SearchWidth;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Labyrinth implements Task {
+public abstract class Labyrinth implements SearchWidth {
     protected boolean[][] matrixLogic;                  //логическая матрица
 
     protected final GridPoint2 START_HUMAN;             //координаты человека при старте игры

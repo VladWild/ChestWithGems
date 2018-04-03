@@ -1,4 +1,4 @@
-package com.vladwild.chest.with.gems.methods.deepwidth.algorithms;
+package com.vladwild.chest.with.gems.methods.algorithms;
 
 import java.util.List;
 

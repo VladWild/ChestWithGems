@@ -13,10 +13,11 @@ import com.vladwild.chest.with.gems.gameplay.StaticObject;
 import com.vladwild.chest.with.gems.gameplay.methods.DynamicObjectMethods;
 import com.vladwild.chest.with.gems.gameplay.methods.HumanMethods;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
-import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.Algorithm;
-import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.DeepStack;
-import com.vladwild.chest.with.gems.methods.deepwidth.algorithms.WidthLink;
-import com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth.Keys;
+import com.vladwild.chest.with.gems.methods.algorithms.Algorithm;
+import com.vladwild.chest.with.gems.methods.algorithms.function.FactoryFunctions;
+import com.vladwild.chest.with.gems.methods.algorithms.searchdeep.FactoryDeep;
+import com.vladwild.chest.with.gems.methods.tasks.labyrinth.Chest;
+import com.vladwild.chest.with.gems.methods.tasks.labyrinth.FactoryTasks;
 import com.vladwild.chest.with.gems.screens.GamePlay;
 
 import java.util.HashSet;
@@ -56,21 +57,32 @@ public class Methods2 extends GamePlay implements Screen{
 
     public Methods2(ChestWithGems game, int level, int speed, int limit) {
         super(game, level, speed);
+        //поиск в глубину
 
-        /*
-        //Algorithm deepRecursion = new DeepRecursion(new All(field), limit);
-        //Algorithm deepRecursion = new DeepRecursion(new Right(field), limit);
-        Algorithm deepRecursion = new DeepRecursion(new Keys(field), limit);
-        deepRecursion.start();
-        variants = deepRecursion.getVariants();
-        */
+        //рекурсия
+        //все
+        Algorithm algorithm = FactoryDeep.getTypeSearchDeep(FactoryDeep.RECURSION,
+                FactoryTasks.getTypeTask(FactoryTasks.ALL, field), limit);
+        //сундук
+        //Algorithm algorithm = FactoryDeep.getTypeSearchDeep(FactoryDeep.RECURSION,
+        //      FactoryTasks.getTypeTask(FactoryTasks.CHEST, field), limit);
+        //все ключи и сундук
+        //Algorithm algorithm = FactoryDeep.getTypeSearchDeep(FactoryDeep.RECURSION,
+        //      FactoryTasks.getTypeTask(FactoryTasks.KEYS, field), limit);
 
+        //стек
+        //все
+        //Algorithm algorithm = FactoryDeep.getTypeSearchDeep(FactoryDeep.STACK,
+        //        FactoryTasks.getTypeTask(FactoryTasks.ALL, field), limit);
+        //сундук
+        //Algorithm algorithm = FactoryDeep.getTypeSearchDeep(FactoryDeep.STACK,
+        //      FactoryTasks.getTypeTask(FactoryTasks.CHEST, field), limit);
+        //все ключи и сундук
+        //Algorithm algorithm = FactoryDeep.getTypeSearchDeep(FactoryDeep.STACK,
+        //      FactoryTasks.getTypeTask(FactoryTasks.KEYS, field), limit);
 
-        //Algorithm deepStack = new DeepStack(new All(field), limit);
-        //Algorithm deepStack = new DeepStack(new Right(field), limit);
-        Algorithm deepStack = new DeepStack(new Keys(field), limit);
-        deepStack.start();
-        variants = deepStack.getVariants();
+        algorithm.start();
+        variants = algorithm.getVariants();
 
         humanMethods = new HumanMethods(gpi, gpm, field.getHumanPoint(), gmip, field.getMatrixLogic());
 
@@ -86,22 +98,39 @@ public class Methods2 extends GamePlay implements Screen{
 
     public Methods2(ChestWithGems game, int level, int speed){
         super(game, level, speed);
+        //поиск в ширину
 
-        /*
-        //Algorithm widthCopy = new WidthCopy(new All(field));
-        //Algorithm widthCopy = new WidthCopy(new Right(field));
-        Algorithm widthCopy = new WidthCopy(new Keys(field));
+        //копирование
+        //все
+        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.COPY,
+        //        FactoryTasks.getTypeTask(FactoryTasks.ALL, field));
+        //сундук
+        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.COPY,
+        //      FactoryTasks.getTypeTask(FactoryTasks.CHEST, field));
+        //все ключи и сундук
+        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.COPY,
+        //      FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
 
-        widthCopy.start();
-        variants = widthCopy.getVariants();
-        */
+        //ссылка
+        //все
+        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.LINK,
+        //        FactoryTasks.getTypeTask(FactoryTasks.ALL, field));
+        //сундук
+        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.LINK,
+        //      FactoryTasks.getTypeTask(FactoryTasks.CHEST, field));
+        //все ключи и сундук
+        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.LINK,
+        //      FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
 
-        //Algorithm widthLink = new WidthLink(new All(field));
-        //Algorithm widthLink = new WidthLink(new Right(field));
-        Algorithm widthLink = new WidthLink(new Keys(field));
+        //функции
 
-        widthLink.start();
-        variants = widthLink.getVariants();
+        //евклидово расстояние
+        //сундук
+        Algorithm algorithm = FactoryFunctions.getTypeFunction(FactoryFunctions.EUCLIDEAN,
+                new Chest(field));
+
+        algorithm.start();
+        variants = algorithm.getVariants();
 
         humanMethods = new HumanMethods(gpi, gpm, field.getHumanPoint(), gmip, field.getMatrixLogic());
 

@@ -1,16 +1,17 @@
-package com.vladwild.chest.with.gems.methods.deepwidth.algorithms;
+package com.vladwild.chest.with.gems.methods.algorithms.searchwidth;
 
-import com.vladwild.chest.with.gems.methods.deepwidth.tasks.Task;
+import com.vladwild.chest.with.gems.methods.algorithms.Algorithm;
+import com.vladwild.chest.with.gems.methods.tasks.SearchWidth;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WidthLink implements Algorithm{
-    private Task task;
+public class Link implements Algorithm {
+    private SearchWidth width;
 
-    public WidthLink(Task task){
-        this.task = task;
+    public Link(SearchWidth task){
+        this.width = task;
     }
 
     @Override
@@ -18,7 +19,7 @@ public class WidthLink implements Algorithm{
         List<Node> nodes = new ArrayList<>();
         boolean end = false;
 
-        for (Object element : task.getElements(null)) {   //?
+        for (Object element : width.getElements(null)) {   //?
             nodes.add(new Node<>(null, element));
         }
 
@@ -28,13 +29,13 @@ public class WidthLink implements Algorithm{
             nodes = new ArrayList<>();
 
             for (Node node : nodesBuffer){                                  //проходимся по всем узлам
-                for(Object element : task.getElements(node.getDown())){     //формируем список узлов на следующем уровне
+                for(Object element : width.getElements(node.getDown())){     //формируем список узлов на следующем уровне
                     nodes.add(new Node(node, element));
                 }
             }
 
             for (Node node : nodes) {                                       //проверяем на окончание цикла
-                if (task.isEnd(node.getDown())) {
+                if (width.isEnd(node.getDown())) {
                     end = true;
                     break;
                 }
@@ -43,12 +44,12 @@ public class WidthLink implements Algorithm{
             nodesBuffer = new ArrayList<>(nodes);
         } while (!end);
 
-        nodes.forEach(node -> task.save(node.getDown()));
+        nodes.forEach(node -> width.save(node.getDown()));
     }
 
     @Override
     public List<List> getVariants() {
-        return task.getRequiredElements();
+        return width.getRequiredElements();
     }
 
     private class Node<E>{

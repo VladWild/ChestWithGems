@@ -1,18 +1,19 @@
-package com.vladwild.chest.with.gems.methods.deepwidth.algorithms;
+package com.vladwild.chest.with.gems.methods.algorithms.searchdeep;
 
-import com.vladwild.chest.with.gems.methods.deepwidth.tasks.Task;
+import com.vladwild.chest.with.gems.methods.algorithms.Algorithm;
+import com.vladwild.chest.with.gems.methods.tasks.SearchDeep;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-public class DeepStack implements Algorithm{
-    private Task task;       //задача
+public class StackUse implements Algorithm {
+    private SearchDeep deep;       //задача
     private int limit;       //глубина
 
-    public DeepStack(Task task, int limit) {
-        this.task = task;
+    public StackUse(SearchDeep deep, int limit) {
+        this.deep = deep;
         this.limit = limit;
     }
 
@@ -21,16 +22,16 @@ public class DeepStack implements Algorithm{
         Stack<List> stack = new Stack<>();           //список всех вариантов до лимита
         List branch = new ArrayList();               //текущая ветка дерева
 
-        stack.push(task.getElements(null));
+        stack.push(deep.getElements(null));
 
         do{
             if (!stack.peek().isEmpty()){
                 if (stack.size() < limit) {
                     branch.add(stack.peek().remove(0));
-                    stack.push(new LinkedList(task.getElements(branch)));
+                    stack.push(new LinkedList(deep.getElements(branch)));
                 } else {
                     branch.add(stack.peek().remove(0));
-                    task.save(branch);
+                    deep.save(branch);
                     branch = new ArrayList(branch);
                     branch.remove(branch.size() - 1);
                 }
@@ -43,6 +44,6 @@ public class DeepStack implements Algorithm{
 
     @Override
     public List<List> getVariants() {
-        return task.getRequiredElements();
+        return deep.getRequiredElements();
     }
 }

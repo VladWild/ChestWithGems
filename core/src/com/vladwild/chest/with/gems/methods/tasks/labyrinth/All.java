@@ -1,4 +1,4 @@
-package com.vladwild.chest.with.gems.methods.deepwidth.tasks.labyrinth;
+package com.vladwild.chest.with.gems.methods.tasks.labyrinth;
 
 import com.vladwild.chest.with.gems.gameplay.Direction;
 import com.vladwild.chest.with.gems.gameplay.StaticObjectField;
