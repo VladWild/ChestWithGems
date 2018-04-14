@@ -14,9 +14,8 @@ import com.vladwild.chest.with.gems.gameplay.methods.DynamicObjectMethods;
 import com.vladwild.chest.with.gems.gameplay.methods.HumanMethods;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
 import com.vladwild.chest.with.gems.methods.algorithms.Algorithm;
-import com.vladwild.chest.with.gems.methods.algorithms.function.FactoryFunctions;
 import com.vladwild.chest.with.gems.methods.algorithms.searchdeep.FactoryDeep;
-import com.vladwild.chest.with.gems.methods.tasks.labyrinth.Chest;
+import com.vladwild.chest.with.gems.methods.algorithms.searchwidth.FactoryWidth;
 import com.vladwild.chest.with.gems.methods.tasks.labyrinth.FactoryTasks;
 import com.vladwild.chest.with.gems.screens.GamePlay;
 
@@ -119,15 +118,15 @@ public class Methods2 extends GamePlay implements Screen{
         //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.LINK,
         //      FactoryTasks.getTypeTask(FactoryTasks.CHEST, field));
         //все ключи и сундук
-        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.LINK,
-        //      FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
+        Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.LINK,
+              FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
 
         //функции
 
         //евклидово расстояние
         //сундук
-        Algorithm algorithm = FactoryFunctions.getTypeFunction(FactoryFunctions.EUCLIDEAN,
-                new Chest(field));
+        //Algorithm algorithm = FactoryFunctions.getTypeFunction(FactoryFunctions.EUCLIDEAN,
+        //        new Chest(field));
 
         algorithm.start();
         variants = algorithm.getVariants();

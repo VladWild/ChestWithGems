@@ -28,9 +28,11 @@ class Methods implements Command {
         return buildStage(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new Methods2(game, 2, 16, 9));
+                //поиск в глубину
+                //game.setScreen(new Methods2(game, 2, 16, 9));
 
-                //game.setScreen(new Methods2(game, 2, 16));
+                //поиск в ширину, функция
+                game.setScreen(new Methods2(game, 2, 16));
             }
         }, PATH_ATLAS, UP, DOWN, BUTTON_SIZE, TABLE_SIZE);
     }

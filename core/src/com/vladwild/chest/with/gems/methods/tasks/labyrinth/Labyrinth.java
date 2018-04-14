@@ -26,30 +26,41 @@ public abstract class Labyrinth implements SearchWidth {
 
     //новый x
     protected int getX(GridPoint2 point) {
-        return matrixLogic[0].length - point.y - 1;
+        return point.x;
     }
 
     //новый y
     protected int getY(GridPoint2 point) {
-        return point.x;
+        return matrixLogic[0].length - point.y - 1;
     }
 
     //проверка на нахождение human в узловой точке
     protected boolean isNodePoint() {
-        return (matrixLogic[human.x + 1][human.y] && matrixLogic[human.x][human.y - 1]) ||
-                (matrixLogic[human.x][human.y + 1] && matrixLogic[human.x + 1][human.y]) ||
-                (matrixLogic[human.x - 1][human.y] && matrixLogic[human.x][human.y + 1]) ||
-                (matrixLogic[human.x][human.y - 1] && matrixLogic[human.x - 1][human.y]);
+        return (matrixLogic[human.y + 1][human.x] && matrixLogic[human.y][human.x - 1]) ||
+                (matrixLogic[human.y][human.x + 1] && matrixLogic[human.y + 1][human.x]) ||
+                (matrixLogic[human.y - 1][human.x] && matrixLogic[human.y][human.x + 1]) ||
+                (matrixLogic[human.y][human.x - 1] && matrixLogic[human.y - 1][human.x]);
     }
 
-    //получение списка всех возможных направлений относительно текущей узловой точки
+    //получение списка всех возможных направлений относительно текущего положения объекта
     protected List<Direction> getDirections() {
         List<Direction> directions = new ArrayList<>();
 
-        if (matrixLogic[human.x + 1][human.y]) directions.add(Direction.DOWN);
-        if (matrixLogic[human.x][human.y + 1]) directions.add(Direction.RIGTH);
-        if (matrixLogic[human.x - 1][human.y]) directions.add(Direction.UP);
-        if (matrixLogic[human.x][human.y - 1]) directions.add(Direction.LEFT);
+        if (isNodePoint()){                         //относительно текущей узловой точки
+            if (matrixLogic[human.y + 1][human.x]) directions.add(Direction.DOWN);
+            if (matrixLogic[human.y][human.x + 1]) directions.add(Direction.RIGTH);
+            if (matrixLogic[human.y - 1][human.x]) directions.add(Direction.UP);
+            if (matrixLogic[human.y][human.x - 1]) directions.add(Direction.LEFT);
+        } else {                                    //не в узловой точке
+            if (matrixLogic[human.y + 1][human.y - 1]) {
+                directions.add(Direction.RIGTH);
+                directions.add(Direction.LEFT);
+            }
+            if (matrixLogic[human.x + 1][human.x - 1]){
+                directions.add(Direction.DOWN);
+                directions.add(Direction.UP);
+            }
+        }
 
         return directions;
     }
@@ -58,16 +69,16 @@ public abstract class Labyrinth implements SearchWidth {
     protected void move(Direction direction) {
         switch (direction) {
             case DOWN:
-                human.x++;
-                break;
-            case RIGTH:
                 human.y++;
                 break;
+            case RIGTH:
+                human.x++;
+                break;
             case UP:
-                human.x--;
+                human.y--;
                 break;
             case LEFT:
-                human.y--;
+                human.x--;
                 break;
         }
     }
