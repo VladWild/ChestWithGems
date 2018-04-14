@@ -3,11 +3,15 @@ package com.vladwild.chest.with.gems.methods.tasks.labyrinth;
 import com.badlogic.gdx.math.GridPoint2;
 import com.vladwild.chest.with.gems.gameplay.Direction;
 import com.vladwild.chest.with.gems.gameplay.StaticObjectField;
+import com.vladwild.chest.with.gems.methods.tasks.SearchFunction;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class Chest extends Labyrinth {
+public class Chest extends Labyrinth implements SearchFunction {
+    private boolean flagFunction = false;           //флаг для оконцания поиска функции
 
     public Chest(StaticObjectField field) {
         super(field);
@@ -24,4 +28,51 @@ public class Chest extends Labyrinth {
             if (human.equals(chest)) ways.add(directions);
         });
     }
+
+    //функция
+    //--------------------------------------------------------------------
+
+    @Override
+    public Set<GridPoint2> getObjects() {
+        Set<GridPoint2> chest = new HashSet<>();
+        chest.add(super.chest);
+
+        return chest;
+    }
+
+    @Override
+    public GridPoint2 getMovingObject() {
+        return new GridPoint2(human);
+    }
+
+    @Override
+    public GridPoint2 getMovingObject(Object element) {
+        GridPoint2 buffer = new GridPoint2(human);          //заносим в буфер текущие координаты человека
+        move((Direction) element);                          //двигаемся человеком по принятому направлению
+        GridPoint2 point = new GridPoint2(human);           //сохраняем получившиеся координаты
+        human = new GridPoint2(buffer);                     //возвращаем человеку координаты из буфера
+        return point;
+    }
+
+    @Override
+    public void move(Object element) {
+        move((Direction) element);
+    }
+
+    @Override
+    public void delete(Object element) {
+        flagFunction = true;
+    }
+
+    @Override
+    public boolean isEnd() {
+        return flagFunction;
+    }
+
+    @Override
+    public List<?> getElements() {
+        return getElements(null);
+    }
 }
+
+

@@ -52,13 +52,13 @@ public abstract class Labyrinth implements SearchWidth {
             if (matrixLogic[human.y - 1][human.x]) directions.add(Direction.UP);
             if (matrixLogic[human.y][human.x - 1]) directions.add(Direction.LEFT);
         } else {                                    //не в узловой точке
-            if (matrixLogic[human.y + 1][human.y - 1]) {
+            if (matrixLogic[human.y + 1][human.x] && matrixLogic[human.y - 1][human.x]) {
+                directions.add(Direction.UP);
+                directions.add(Direction.DOWN);
+            }
+            if (matrixLogic[human.y][human.x + 1] && matrixLogic[human.y][human.x - 1]){
                 directions.add(Direction.RIGTH);
                 directions.add(Direction.LEFT);
-            }
-            if (matrixLogic[human.x + 1][human.x - 1]){
-                directions.add(Direction.DOWN);
-                directions.add(Direction.UP);
             }
         }
 

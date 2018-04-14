@@ -10,8 +10,8 @@ import java.util.List;
 public class Link implements Algorithm {
     private SearchWidth width;
 
-    public Link(SearchWidth task){
-        this.width = task;
+    public Link(SearchWidth width){
+        this.width = width;
     }
 
     @Override

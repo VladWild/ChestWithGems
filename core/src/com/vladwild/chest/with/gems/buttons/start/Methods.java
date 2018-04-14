@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vladwild.chest.with.gems.buttons.Command;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
-import com.vladwild.chest.with.gems.screens.methods.Methods2;
+import com.vladwild.chest.with.gems.screens.methods.FunctionsScreen;
 
 class Methods implements Command {
     private final static String PATH_ATLAS = "buttons\\screens\\start\\start.pack";
@@ -28,14 +28,19 @@ class Methods implements Command {
         return buildStage(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //поиск в глубину
-                //game.setScreen(new Methods2(game, 2, 16, 9));
+                //методы поиска в глубину
+                //game.setScreen(new DeepAndWidth(game, 2, 16, 9));
 
-                //поиск в ширину, функция
-                game.setScreen(new Methods2(game, 2, 16));
+                //методы поиска в ширину
+                //game.setScreen(new DeepAndWidth(game, 2, 16));
+
+                //функции
+                game.setScreen(new FunctionsScreen(game, 2, 16));
             }
         }, PATH_ATLAS, UP, DOWN, BUTTON_SIZE, TABLE_SIZE);
     }
 }
+
+
 
 

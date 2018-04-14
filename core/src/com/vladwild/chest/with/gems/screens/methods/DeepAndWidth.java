@@ -23,8 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Deprecated
-public class Methods2 extends GamePlay implements Screen{
+public class DeepAndWidth extends GamePlay implements Screen {
     private List<List> variants;
 
     private DynamicObjectMethods humanMethods;
@@ -46,15 +45,15 @@ public class Methods2 extends GamePlay implements Screen{
     @Override
     protected void removeKey(DynamicObject human) {
         iterKeys = keysBuffer.iterator();
-        while (iterKeys.hasNext()){
-            if (human.getPositionPixel().equals(iterKeys.next().getPositionPixel())){
+        while (iterKeys.hasNext()) {
+            if (human.getPositionPixel().equals(iterKeys.next().getPositionPixel())) {
                 iterKeys.remove();
                 changeCountAllKeys();
             }
         }
     }
 
-    public Methods2(ChestWithGems game, int level, int speed, int limit) {
+    public DeepAndWidth(ChestWithGems game, int level, int speed, int limit) {
         super(game, level, speed);
         //поиск в глубину
 
@@ -95,38 +94,31 @@ public class Methods2 extends GamePlay implements Screen{
         outCountAllKeysBuffer = new StringBuilder(CONST);
     }
 
-    public Methods2(ChestWithGems game, int level, int speed){
+    public DeepAndWidth(ChestWithGems game, int level, int speed) {
         super(game, level, speed);
         //поиск в ширину
 
         //копирование
         //все
-        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.COPY,
+        //Algorithm algorithm = FactoryWidth.getTypeFunction(FactoryWidth.COPY,
         //        FactoryTasks.getTypeTask(FactoryTasks.ALL, field));
         //сундук
-        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.COPY,
+        //Algorithm algorithm = FactoryWidth.getTypeFunction(FactoryWidth.COPY,
         //      FactoryTasks.getTypeTask(FactoryTasks.CHEST, field));
         //все ключи и сундук
-        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.COPY,
-        //      FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
+        Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.COPY,
+                FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
 
         //ссылка
         //все
-        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.LINK,
+        //Algorithm algorithm = FactoryWidth.getTypeFunction(FactoryWidth.LINK,
         //        FactoryTasks.getTypeTask(FactoryTasks.ALL, field));
         //сундук
-        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.LINK,
+        //Algorithm algorithm = FactoryWidth.getTypeFunction(FactoryWidth.LINK,
         //      FactoryTasks.getTypeTask(FactoryTasks.CHEST, field));
         //все ключи и сундук
-        Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.LINK,
-              FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
-
-        //функции
-
-        //евклидово расстояние
-        //сундук
-        //Algorithm algorithm = FactoryFunctions.getTypeFunction(FactoryFunctions.EUCLIDEAN,
-        //        new Chest(field));
+        //Algorithm algorithm = FactoryWidth.getTypeFunction(FactoryWidth.LINK,
+        //      FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
 
         algorithm.start();
         variants = algorithm.getVariants();
@@ -161,16 +153,15 @@ public class Methods2 extends GamePlay implements Screen{
     }
 
     //движение человека по направлениям из очереди
-    private void moveHumanMethods(){
-        if(humanMethods.isNodePoint()){
-            if(!variants.isEmpty()){
+    private void moveHumanMethods() {
+        if (humanMethods.isNodePoint()) {
+            if (!variants.isEmpty()) {
                 if (variants.get(0).size() != 0) {
                     currentDiriction = (Direction) variants.get(0).get(0);
                     variants.get(0).remove(0);
-                    //humanMethods.move(currentDiriction, speed);
                 } else {
                     variants.remove(0);
-                    if (variants.size() != 0){
+                    if (variants.size() != 0) {
                         humanMethods.setPositionLogic(startPositionLogic);
                         humanMethods.setPositionPixel(startPositionPixel);
                     }
@@ -190,11 +181,6 @@ public class Methods2 extends GamePlay implements Screen{
         humanMethods.move(currentDiriction, speed);
     }
 
-    //сравнение координат методного человека и сундука
-    private boolean isEqualHumamMethodsChest(){
-        return humanMethods.getPositionPixel().equals(chest.getPositionPixel());
-    }
-
     @Override
     public void render(float delta) {
         //super.render(delta);
@@ -206,13 +192,11 @@ public class Methods2 extends GamePlay implements Screen{
 
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        //if (!isEqualHumamMethodsChest()) {
-            if (humanMethods.isCenterLogicalSquare()){
-                moveHumanMethods();
-            } else {
-                humanMethods.move(currentDiriction, speed);
-            }
-        //}
+        if (humanMethods.isCenterLogicalSquare()) {
+            moveHumanMethods();
+        } else {
+            humanMethods.move(currentDiriction, speed);
+        }
 
         batch.begin();
         batch.draw(background, gpi.getBGRect().x, gpi.getBGRect().y, gpi.getBGRect().width, gpi.getBGRect().height);

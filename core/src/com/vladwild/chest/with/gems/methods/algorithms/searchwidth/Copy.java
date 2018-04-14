@@ -1,15 +1,15 @@
 package com.vladwild.chest.with.gems.methods.algorithms.searchwidth;
 
 import com.vladwild.chest.with.gems.methods.algorithms.Algorithm;
-import com.vladwild.chest.with.gems.methods.tasks.labyrinth.Labyrinth;
+import com.vladwild.chest.with.gems.methods.tasks.SearchWidth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Copy implements Algorithm {
-    private Labyrinth width;     //задача
+    private SearchWidth width;     //задача
 
-    public Copy(Labyrinth width) {
+    public Copy(SearchWidth width) {
         this.width = width;
     }
 
