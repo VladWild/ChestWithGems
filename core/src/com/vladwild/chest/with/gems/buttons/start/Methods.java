@@ -34,8 +34,11 @@ class Methods implements Command {
                 //методы поиска в ширину
                 //game.setScreen(new DeepAndWidth(game, 2, 16));
 
-                //функции
-                game.setScreen(new FunctionsScreen(game, 2, 16));
+                //евклидова функция
+                //game.setScreen(new FunctionsScreen(game, 2, 16));
+
+                //евклидова функция c коэффициентом
+                game.setScreen(new FunctionsScreen(game, 1, 16,  100));
             }
         }, PATH_ATLAS, UP, DOWN, BUTTON_SIZE, TABLE_SIZE);
     }

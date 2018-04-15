@@ -30,7 +30,7 @@ public class FunctionsScreen extends GamePlay implements Screen {
     private GridPoint2 startPositionLogic;
     private GridPoint2 startPositionPixel;
 
-    private Direction currentDiriction;
+    private Direction currentDirection;
 
     private InputMultiplexer inputMultiplexer;
 
@@ -41,29 +41,18 @@ public class FunctionsScreen extends GamePlay implements Screen {
     private StringBuilder outCountAllKeysBuffer;
     private final StringBuilder CONST = new StringBuilder(outCountAllKeys);
 
-    @Override
-    protected void removeKey(DynamicObject human) {
-        iterKeys = keysBuffer.iterator();
-        while (iterKeys.hasNext()) {
-            if (human.getPositionPixel().equals(iterKeys.next().getPositionPixel())) {
-                iterKeys.remove();
-                changeCountAllKeys();
-            }
-        }
-    }
-
-    public FunctionsScreen(ChestWithGems game, int level, int speed) {
+    public FunctionsScreen(ChestWithGems game, int level, int speed, double coefficient) {
         super(game, level, speed);
 
         //функции
 
         //евклидово расстояние
         //сундук
-        //Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN,
-        //        FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.CHEST, field));
+        //Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN_COEFFICIENT,
+        //        FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.CHEST, field), coefficient);
         //все ключи и сундук
-        Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN,
-                FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.KEYS, field));
+        Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN_COEFFICIENT,
+                FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.KEYS, field), coefficient);
 
         algorithm.start();
         variants = algorithm.getVariants();
@@ -78,6 +67,45 @@ public class FunctionsScreen extends GamePlay implements Screen {
         keysBuffer = new HashSet<>(super.keys);
 
         outCountAllKeysBuffer = new StringBuilder(CONST);
+    }
+
+    public FunctionsScreen(ChestWithGems game, int level, int speed) {
+        super(game, level, speed);
+
+        //функции
+
+        //евклидово расстояние
+        //сундук
+        //Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN,
+        //        FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.CHEST, field), 0);
+        //все ключи и сундук
+        Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN,
+                FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.KEYS, field), 0);
+
+        algorithm.start();
+        variants = algorithm.getVariants();
+
+        humanMethods = new HumanMethods(gpi, gpm, field.getHumanPoint(), gmip, field.getMatrixLogic());
+
+        startPositionLogic = new GridPoint2(humanMethods.getPositionLogic().x, humanMethods.getPositionLogic().y);
+        startPositionPixel = new GridPoint2(humanMethods.getPositionPixel().x, humanMethods.getPositionPixel().y);
+
+        inputMultiplexer = new InputMultiplexer();
+
+        keysBuffer = new HashSet<>(super.keys);
+
+        outCountAllKeysBuffer = new StringBuilder(CONST);
+    }
+
+    @Override
+    protected void removeKey(DynamicObject human) {
+        iterKeys = keysBuffer.iterator();
+        while (iterKeys.hasNext()) {
+            if (human.getPositionPixel().equals(iterKeys.next().getPositionPixel())) {
+                iterKeys.remove();
+                changeCountAllKeys();
+            }
+        }
     }
 
     @Override
@@ -102,7 +130,7 @@ public class FunctionsScreen extends GamePlay implements Screen {
         //проходимся по 1 списку всех направлений, полученных из алгоритма
         if (!variants.isEmpty()) {
             if (variants.get(0).size() != 0) {
-                currentDiriction = (Direction) variants.get(0).get(0);
+                currentDirection = (Direction) variants.get(0).get(0);
                 variants.get(0).remove(0);
             } else {
                 variants.remove(0);
@@ -122,7 +150,9 @@ public class FunctionsScreen extends GamePlay implements Screen {
         } else {
             return;
         }
-        humanMethods.move(currentDiriction, speed);
+        humanMethods.move(currentDirection, speed);
+
+        System.out.println(variants.get(0).size());
     }
 
     @Override
@@ -139,7 +169,7 @@ public class FunctionsScreen extends GamePlay implements Screen {
         if (humanMethods.isCenterLogicalSquare()) {
             moveHumanMethods();
         } else {
-            humanMethods.move(currentDiriction, speed);
+            humanMethods.move(currentDirection, speed);
         }
 
         batch.begin();
