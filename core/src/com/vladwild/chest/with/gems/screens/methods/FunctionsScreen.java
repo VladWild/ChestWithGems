@@ -69,6 +69,7 @@ public class FunctionsScreen extends GamePlay implements Screen {
         outCountAllKeysBuffer = new StringBuilder(CONST);
     }
 
+
     public FunctionsScreen(ChestWithGems game, int level, int speed) {
         super(game, level, speed);
 
@@ -126,7 +127,7 @@ public class FunctionsScreen extends GamePlay implements Screen {
     }
 
     //движение человека по направлениям из очереди
-    private void moveHumanMethods() {                       //отличие от DeepAndWidth только тут по сути
+    private void moveHumanMethods() {                       //отличие от DeepWidthSBB только тут по сути
         //проходимся по 1 списку всех направлений, полученных из алгоритма
         if (!variants.isEmpty()) {
             if (variants.get(0).size() != 0) {

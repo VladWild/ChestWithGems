@@ -15,7 +15,8 @@ import com.vladwild.chest.with.gems.gameplay.methods.HumanMethods;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
 import com.vladwild.chest.with.gems.methods.algorithms.Algorithm;
 import com.vladwild.chest.with.gems.methods.algorithms.searchdeep.FactoryDeep;
-import com.vladwild.chest.with.gems.methods.algorithms.searchwidth.FactoryWidth;
+import com.vladwild.chest.with.gems.methods.algorithms.strategybb.FactorySBB;
+import com.vladwild.chest.with.gems.methods.tasks.FactorySearchStrategyBB;
 import com.vladwild.chest.with.gems.methods.tasks.labyrinth.FactoryTasks;
 import com.vladwild.chest.with.gems.screens.GamePlay;
 
@@ -23,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DeepAndWidth extends GamePlay implements Screen {
+public class DeepWidthSBB extends GamePlay implements Screen {
     private List<List> variants;
 
     private DynamicObjectMethods humanMethods;
@@ -53,7 +54,7 @@ public class DeepAndWidth extends GamePlay implements Screen {
         }
     }
 
-    public DeepAndWidth(ChestWithGems game, int level, int speed, int limit) {
+    public DeepWidthSBB(ChestWithGems game, int level, int speed, int limit) {
         super(game, level, speed);
         //поиск в глубину
 
@@ -94,7 +95,7 @@ public class DeepAndWidth extends GamePlay implements Screen {
         outCountAllKeysBuffer = new StringBuilder(CONST);
     }
 
-    public DeepAndWidth(ChestWithGems game, int level, int speed) {
+    public DeepWidthSBB(ChestWithGems game, int level, int speed) {
         super(game, level, speed);
         //поиск в ширину
 
@@ -106,8 +107,8 @@ public class DeepAndWidth extends GamePlay implements Screen {
         //Algorithm algorithm = FactoryWidth.getTypeFunction(FactoryWidth.COPY,
         //      FactoryTasks.getTypeTask(FactoryTasks.CHEST, field));
         //все ключи и сундук
-        Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.COPY,
-                FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
+        //Algorithm algorithm = FactoryWidth.getTypeSearchWidth(FactoryWidth.COPY,
+        //        FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
 
         //ссылка
         //все
@@ -119,6 +120,18 @@ public class DeepAndWidth extends GamePlay implements Screen {
         //все ключи и сундук
         //Algorithm algorithm = FactoryWidth.getTypeFunction(FactoryWidth.LINK,
         //      FactoryTasks.getTypeTask(FactoryTasks.KEYS, field));
+
+        //---------------------------------------------------------------------------------------------
+
+        //стратегия ветвей и границ
+
+        //сундук
+        //Algorithm algorithm = FactorySBB.getTypeSBB(FactorySBB.STRATEGY_BB,
+        //        FactorySearchStrategyBB.getTypeTask(FactorySearchStrategyBB.CHEST, field));
+
+        //все ключи и сундук
+        Algorithm algorithm = FactorySBB.getTypeSBB(FactorySBB.STRATEGY_BB,
+                FactorySearchStrategyBB.getTypeTask(FactorySearchStrategyBB.KEYS, field));
 
         algorithm.start();
         variants = algorithm.getVariants();

@@ -4,13 +4,14 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.vladwild.chest.with.gems.gameplay.Direction;
 import com.vladwild.chest.with.gems.gameplay.StaticObjectField;
 import com.vladwild.chest.with.gems.methods.tasks.SearchFunction;
+import com.vladwild.chest.with.gems.methods.tasks.SearchStrategyBB;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Keys extends Labyrinth implements SearchFunction{
+public class Keys extends Labyrinth implements SearchFunction, SearchStrategyBB {
     private Set<GridPoint2> keys = new HashSet<>();         //координаты ключей
     private Set<GridPoint2> keysBuffer;                     //буфер координат ключей
 
@@ -24,13 +25,18 @@ public class Keys extends Labyrinth implements SearchFunction{
     }
 
     @Override
-    protected void walk(Direction direction) {
+    protected int walk(Direction direction) {
+        int count = 0;
+
         do {
             move(direction);
+            count++;
             keys.forEach(key -> {
                 if (human.equals(key)) keysBuffer.remove(key);
             });
         } while (!isNodePoint());
+
+        return count;
     }
 
     @Override
@@ -104,6 +110,39 @@ public class Keys extends Labyrinth implements SearchFunction{
     @Override
     public List<?> getElements() {
         return getElements(null);
+    }
+
+    //стратегия ветвей и границ
+    //-------------------------------------------------------------------------------
+
+    @Override
+    public int getDistance(List<?> elements, Object element) {
+        List<Direction> directions = new ArrayList<>((List<Direction>) elements);  //конвертируем элементы направлений, создавая список этих направлений
+        human = new GridPoint2(START_HUMAN);                //присваиваем стартовые координаты человека
+
+        int path = 0;
+
+        //пробегаем весь путь на текущем списке направлений и считаем сумму пути
+        for (Direction direction : directions) {
+            path += walk(direction);
+        }
+
+        if (element != null) path += walk((Direction) element);
+
+        return path;
+    }
+
+    @Override
+    public List<?> getElements(List<?> elements, Object element) {
+        if (elements == null) return getDirections();     //если элементов нет, то возвращаем список направлений относительно текущего положения человека
+
+        List<Direction> directions = new ArrayList<>((List<Direction>) elements);  //конвертируем элементы направлений, создавая список этих направлений
+        human = new GridPoint2(START_HUMAN);                //присваиваем стартовые координаты человека
+
+        directions.forEach(this::walk);                     //пробегаем весь путь на текущем списке направлений
+        walk((Direction) element);
+
+        return getDirections();
     }
 }
 

@@ -84,10 +84,15 @@ public abstract class Labyrinth implements SearchWidth {
     }
 
     //гуляем от текущей точки человека до следующей узловой
-    protected void walk(Direction direction) {
+    protected int walk(Direction direction) {
+        int count = 0;
+
         do {
             move(direction);
+            count++;
         } while (!isNodePoint());
+
+        return count;
     }
 
     @Override
