@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vladwild.chest.with.gems.buttons.Command;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
-import com.vladwild.chest.with.gems.screens.methods.DeepWidthSBB;
+import com.vladwild.chest.with.gems.screens.methods.DeepWidthSBBSEP;
 
 class Methods implements Command {
     private final static String PATH_ATLAS = "buttons\\screens\\start\\start.pack";
@@ -29,10 +29,10 @@ class Methods implements Command {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //методы поиска в глубину
-                //game.setScreen(new DeepWidthSBB(game, 2, 16, 9));
+                //game.setScreen(new DeepWidthSBBSEP(game, 2, 16, 9));
 
                 //методы поиска в ширину
-                //game.setScreen(new DeepWidthSBB(game, 2, 16));
+                //game.setScreen(new DeepWidthSBBSEP(game, 2, 16));
 
                 //евклидова функция
                 //game.setScreen(new FunctionsScreen(game, 2, 16));
@@ -41,7 +41,10 @@ class Methods implements Command {
                 //game.setScreen(new FunctionsScreen(game, 1, 16, 25));
 
                 //стратегия ветвей и границ
-                game.setScreen(new DeepWidthSBB(game, 2, 16));
+                //game.setScreen(new DeepWidthSBBSEP(game, 1, 16));
+
+                //стратегия равных цен
+                game.setScreen(new DeepWidthSBBSEP(game, 3, 16));
             }
         }, PATH_ATLAS, UP, DOWN, BUTTON_SIZE, TABLE_SIZE);
     }

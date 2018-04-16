@@ -5,13 +5,14 @@ import com.vladwild.chest.with.gems.gameplay.Direction;
 import com.vladwild.chest.with.gems.gameplay.StaticObjectField;
 import com.vladwild.chest.with.gems.methods.tasks.SearchFunction;
 import com.vladwild.chest.with.gems.methods.tasks.SearchStrategyBB;
+import com.vladwild.chest.with.gems.methods.tasks.SearchStrategyEP;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Chest extends Labyrinth implements SearchFunction, SearchStrategyBB {
+public class Chest extends Labyrinth implements SearchFunction, SearchStrategyBB, SearchStrategyEP {
     private boolean flagFunction = false;           //флаг для оконцания поиска функции
 
     public Chest(StaticObjectField field) {
@@ -106,6 +107,32 @@ public class Chest extends Labyrinth implements SearchFunction, SearchStrategyBB
         walk((Direction) element);
 
         return getDirections();
+    }
+
+    //стратегия равных цен
+    //---------------------------------------------------------------------------------------
+
+    @Override
+    public Object getObject() {
+        return new GridPoint2(START_HUMAN);
+    }
+
+    @Override
+    public Object getObject(List<?> list) {
+        List<Direction> directions = new ArrayList<>((List<Direction>) list);
+
+        human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
+
+        directions.forEach(direction -> {
+            walk(direction);
+            if (human.equals(chest)) ways.add(directions);
+        });
+
+        GridPoint2 point = new GridPoint2(human);
+
+        human = new GridPoint2(START_HUMAN);
+
+        return point;
     }
 }
 

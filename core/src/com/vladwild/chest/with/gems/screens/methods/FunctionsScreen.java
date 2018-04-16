@@ -15,7 +15,7 @@ import com.vladwild.chest.with.gems.gameplay.methods.HumanMethods;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
 import com.vladwild.chest.with.gems.methods.algorithms.Algorithm;
 import com.vladwild.chest.with.gems.methods.algorithms.function.FactoryFunction;
-import com.vladwild.chest.with.gems.methods.tasks.FactorySearchFunctionTasks;
+import com.vladwild.chest.with.gems.methods.tasks.FactoryTasksSearchFunction;
 import com.vladwild.chest.with.gems.screens.GamePlay;
 
 import java.util.HashSet;
@@ -49,10 +49,10 @@ public class FunctionsScreen extends GamePlay implements Screen {
         //евклидово расстояние
         //сундук
         //Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN_COEFFICIENT,
-        //        FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.CHEST, field), coefficient);
+        //        FactoryTasksSearchFunction.getTypeTask(FactoryTasksSearchFunction.CHEST, field), coefficient);
         //все ключи и сундук
         Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN_COEFFICIENT,
-                FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.KEYS, field), coefficient);
+                FactoryTasksSearchFunction.getTypeTask(FactoryTasksSearchFunction.KEYS, field), coefficient);
 
         algorithm.start();
         variants = algorithm.getVariants();
@@ -78,10 +78,10 @@ public class FunctionsScreen extends GamePlay implements Screen {
         //евклидово расстояние
         //сундук
         //Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN,
-        //        FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.CHEST, field), 0);
+        //        FactoryTasksSearchFunction.getTypeTask(FactoryTasksSearchFunction.CHEST, field), 0);
         //все ключи и сундук
         Algorithm algorithm = FactoryFunction.getTypeFunction(FactoryFunction.EUCLIDEAN,
-                FactorySearchFunctionTasks.getTypeTask(FactorySearchFunctionTasks.KEYS, field), 0);
+                FactoryTasksSearchFunction.getTypeTask(FactoryTasksSearchFunction.KEYS, field), 0);
 
         algorithm.start();
         variants = algorithm.getVariants();
@@ -127,7 +127,7 @@ public class FunctionsScreen extends GamePlay implements Screen {
     }
 
     //движение человека по направлениям из очереди
-    private void moveHumanMethods() {                       //отличие от DeepWidthSBB только тут по сути
+    private void moveHumanMethods() {                       //отличие от DeepWidthSBBSEP только тут по сути
         //проходимся по 1 списку всех направлений, полученных из алгоритма
         if (!variants.isEmpty()) {
             if (variants.get(0).size() != 0) {

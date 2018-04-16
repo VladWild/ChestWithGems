@@ -5,13 +5,14 @@ import com.vladwild.chest.with.gems.gameplay.Direction;
 import com.vladwild.chest.with.gems.gameplay.StaticObjectField;
 import com.vladwild.chest.with.gems.methods.tasks.SearchFunction;
 import com.vladwild.chest.with.gems.methods.tasks.SearchStrategyBB;
+import com.vladwild.chest.with.gems.methods.tasks.SearchStrategyEP;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Keys extends Labyrinth implements SearchFunction, SearchStrategyBB {
+public class Keys extends Labyrinth implements SearchFunction, SearchStrategyBB, SearchStrategyEP {
     private Set<GridPoint2> keys = new HashSet<>();         //координаты ключей
     private Set<GridPoint2> keysBuffer;                     //буфер координат ключей
 
@@ -144,5 +145,32 @@ public class Keys extends Labyrinth implements SearchFunction, SearchStrategyBB 
 
         return getDirections();
     }
+
+    //стратегия равных цен
+    //---------------------------------------------------------------------------------------
+
+    @Override
+    public Object getObject() {
+        return new GridPoint2(START_HUMAN);
+    }
+
+    @Override
+    public Object getObject(List<?> list) {
+        List<Direction> directions = new ArrayList<>((List<Direction>) list);
+
+        human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
+
+        directions.forEach(direction -> {
+            walk(direction);
+            if (human.equals(chest)) ways.add(directions);
+        });
+
+        GridPoint2 point = new GridPoint2(human);
+
+        human = new GridPoint2(START_HUMAN);
+
+        return point;
+    }
 }
+
 

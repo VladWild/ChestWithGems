@@ -15,8 +15,8 @@ import com.vladwild.chest.with.gems.gameplay.methods.HumanMethods;
 import com.vladwild.chest.with.gems.gamestarter.ChestWithGems;
 import com.vladwild.chest.with.gems.methods.algorithms.Algorithm;
 import com.vladwild.chest.with.gems.methods.algorithms.searchdeep.FactoryDeep;
-import com.vladwild.chest.with.gems.methods.algorithms.strategybb.FactorySBB;
-import com.vladwild.chest.with.gems.methods.tasks.FactorySearchStrategyBB;
+import com.vladwild.chest.with.gems.methods.algorithms.strategyep.FactorySEP;
+import com.vladwild.chest.with.gems.methods.tasks.FactoryTasksSearchStrategyEP;
 import com.vladwild.chest.with.gems.methods.tasks.labyrinth.FactoryTasks;
 import com.vladwild.chest.with.gems.screens.GamePlay;
 
@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DeepWidthSBB extends GamePlay implements Screen {
+public class DeepWidthSBBSEP extends GamePlay implements Screen {
     private List<List> variants;
 
     private DynamicObjectMethods humanMethods;
@@ -54,7 +54,7 @@ public class DeepWidthSBB extends GamePlay implements Screen {
         }
     }
 
-    public DeepWidthSBB(ChestWithGems game, int level, int speed, int limit) {
+    public DeepWidthSBBSEP(ChestWithGems game, int level, int speed, int limit) {
         super(game, level, speed);
         //поиск в глубину
 
@@ -95,7 +95,7 @@ public class DeepWidthSBB extends GamePlay implements Screen {
         outCountAllKeysBuffer = new StringBuilder(CONST);
     }
 
-    public DeepWidthSBB(ChestWithGems game, int level, int speed) {
+    public DeepWidthSBBSEP(ChestWithGems game, int level, int speed) {
         super(game, level, speed);
         //поиск в ширину
 
@@ -123,15 +123,29 @@ public class DeepWidthSBB extends GamePlay implements Screen {
 
         //---------------------------------------------------------------------------------------------
 
+
         //стратегия ветвей и границ
 
         //сундук
         //Algorithm algorithm = FactorySBB.getTypeSBB(FactorySBB.STRATEGY_BB,
-        //        FactorySearchStrategyBB.getTypeTask(FactorySearchStrategyBB.CHEST, field));
+        //        FactoryTasksSearchStrategyBB.getTypeTask(FactoryTasksSearchStrategyBB.CHEST, field));
 
         //все ключи и сундук
-        Algorithm algorithm = FactorySBB.getTypeSBB(FactorySBB.STRATEGY_BB,
-                FactorySearchStrategyBB.getTypeTask(FactorySearchStrategyBB.KEYS, field));
+        //Algorithm algorithm = FactorySBB.getTypeSBB(FactorySBB.STRATEGY_BB,
+        //        FactoryTasksSearchStrategyBB.getTypeTask(FactoryTasksSearchStrategyBB.KEYS, field));
+
+        //---------------------------------------------------------------------------------------------
+
+
+        //стратегия равных цен
+
+        //сундук
+        Algorithm algorithm = FactorySEP.getTypeSBB(FactorySEP.STRATEGY_EP,
+                FactoryTasksSearchStrategyEP.getTypeTask(FactoryTasksSearchStrategyEP.CHEST, field));
+
+        //все ключи и сундук
+        //Algorithm algorithm = FactorySEP.getTypeSBB(FactorySEP.STRATEGY_EP,
+        //        FactoryTasksSearchStrategyEP.getTypeTask(FactoryTasksSearchStrategyEP.KEYS, field));
 
         algorithm.start();
         variants = algorithm.getVariants();
