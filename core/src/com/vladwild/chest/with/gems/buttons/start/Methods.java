@@ -44,7 +44,7 @@ class Methods implements Command {
                 //game.setScreen(new DeepWidthSBBSEP(game, 1, 16));
 
                 //стратегия равных цен
-                game.setScreen(new DeepWidthSBBSEP(game, 3, 16));
+                game.setScreen(new DeepWidthSBBSEP(game, 2, 16));
             }
         }, PATH_ATLAS, UP, DOWN, BUTTON_SIZE, TABLE_SIZE);
     }

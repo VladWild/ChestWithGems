@@ -15,184 +15,136 @@ public class StrategyEP implements Algorithm{
     SearchStrategyEP sep;
 
     Map<Object, Set<Node>> objects = new HashMap<>();    //Map объектов (координат) и узлов, находящихся в этих объектах
+    int minDistance;                                     //минимальная дистанция текущего пути
 
     public StrategyEP(SearchStrategyEP sep){
         this.sep = sep;
     }
 
-    /*
     private Set getSet(Node node){
         Set<Node> set = new HashSet<>();
         set.add(node);
         return set;
     }
-    */
 
     private Set addNodeInSet(Node node){
-        if (sep.getObject(node.getDown()) == null){
+        if (objects.get(sep.getObject(node.getDown())) == null){
             Set<Node> set = new HashSet<>();
             set.add(node);
             return set;
         } else {
             Set<Node> set = objects.get(sep.getObject(node.getDown()));
             set.add(node);
-            
+            return set;
         }
+    }
+
+    private int getDistance(Set<Node> nodes){
+        int distance = 0;
+
+        for (Node node : nodes){
+            distance = node.getDistance();
+        }
+
+        return distance;
     }
 
     @Override
     public void start() {
-        Map<List, Integer> map = new HashMap<>();         //Map путей и их дистанций
+        Map<List, Integer> paths = new HashMap<>();       //Map путей и их дистанций
 
         List<Node> nodes = new ArrayList<>();             //список узлов
 
-        objects.put(sep.getObject(), getSet(new Node())); //ложим в Map:
+        objects.put(sep.getObject(), getSet(new Node())); //кладем в Map:
                                                           //ключ - объект (начальные координаты) человека;
-                                                          //значение - множество узелов (дизтанция в нем будет = 0)
+                                                          //значение - множество одного начального узела (дизтанция в нем будет = 0)
 
         for (Object element : sep.getElements(null)) {   //вводим первые элементы в список узлов
             Node node = new Node<>(null, element);
             node.setChilds(sep.getElements(node.getDown()));
             node.setDistance(sep.getDistance(node.getDown(), null));
+
             nodes.add(node);
 
-            objects.put(sep.getObject(node.getDown()), getSet(node));   //кладем в Map
+            objects.put(sep.getObject(node.getDown()), addNodeInSet(node));   //кладем в Map
         }
 
-        int minDistanceObject = Integer.MAX_VALUE;           //минимальная дистанция до необходимого объекта
+        int distanceRightPath = Integer.MAX_VALUE;           //дистанция правильного пути до необходимого объекта
+
 
         do{
-            int minDistance = Integer.MAX_VALUE;
+            minDistance = Integer.MAX_VALUE;                 //обновляем дистанцию на максимально возможное значение
 
-            Node currentNode = new Node();          //текущий узел из которого мы берем требуемый производный узел
-            Node requiredChildNode = new Node();    //найденый производный узел
+            if (nodes.isEmpty()) break;
 
-            //нахождение производного элемента с минимальным путем от начального положения до этого производного
-            for (Node node : nodes){                                  //проходимся по всем узлам
-                for(Object element : node.getChilds()){               //проходимся по производным элементам этих узлов
-                    Node nodeChild = new Node(node, element);
-                    nodeChild.setDistance(sep.getDistance(node.getDown(), element));
-                    if (nodeChild.getDistance() < minDistance){
-                        nodeChild.setChilds(sep.getElements(node.getDown(), element));
-                        minDistance = nodeChild.getDistance();
-                        currentNode = node;
-                        requiredChildNode = nodeChild;
-                    }
-                }
+            Node parentNode = nodes.get(0);                  //берем (первый) узел из списки nodes
+
+            //для безопасности
+            if (nodes.get(0).getChilds().isEmpty()) {
+                nodes.remove(parentNode);
+                continue;
             }
 
-            //удаляем производный узел из списка списка возможных узлов текущего узла
-            currentNode.deleteChild(requiredChildNode.getElement());
+            Node childNode = new Node(parentNode,                             //берем производный элемент (первый) у этого узла
+                    parentNode.getChilds().get(0));
+            childNode.setChilds(sep.getElements(parentNode.getDown(),
+                    parentNode.getChilds().get(0)));
+            childNode.setDistance(sep.getDistance(parentNode.getDown(),
+                    parentNode.getChilds().get(0)));
 
-            //удаляем из списка возможных узлов узел с пустым списком всех возможных производных узлов
-            if (currentNode.isEmpotyChild()) nodes.remove(currentNode);
+            parentNode.deleteChild(childNode.getElement());                  //удаляем найденый производный элемент из этого узла
+            if (parentNode.isEmpotyChild()) nodes.remove(parentNode);        //удаляем из nodes этот узел
+                                                                             //если список всех возможных производных узлов пуст
 
-            //если этот найденый производный элемент есть в objects
-            if (objects.get(sep.getObject(requiredChildNode.getDown())) != null){
-                //если в найденом производном элементе distance < чем в Map (с этими координатами)
-                if (requiredChildNode.getDistance() < objects.get(sep.getObject(requiredChildNode.getDown())).getDistance()){
-                    //удаляем этот узел в nodes, доставая его из Map'а
-                    nodes.remove(objects.get(sep.getObject(requiredChildNode.getDown())));
-                    //заменяем его в Map
-                    objects.remove(objects.get(sep.getObject(requiredChildNode.getDown())));                    //удаляем
-                    objects.put(objects.get(sep.getObject(requiredChildNode.getDown())), requiredChildNode);    //вставляем
+            if (childNode.getDistance() <= distanceRightPath) {
+                //если этот найденый производный элемент есть в objects
+                if (objects.get(sep.getObject(childNode.getDown())) != null){
+                    //если в найденом производном элементе distance < чем в Map (с этими координатами) - заменяем Set
+                    if (childNode.getDistance() < getDistance(objects.get(sep.getObject(childNode.getDown())))){
+                        //заменяем его в Map
+                        objects.remove(sep.getObject(childNode.getDown()));                                  //удаляем ключ - объект (координаты)
+                        objects.put(sep.getObject(childNode.getDown()), addNodeInSet(childNode));    //вставляем
+                        //добавляем найденый производный узел в спизок всех возможных узлов
+                        nodes.add(childNode);
+                    }
+                    //если в найденом производном элементе distance = в Map (с этими координатами) - дополняем Set
+                    if (childNode.getDistance() == getDistance(objects.get(sep.getObject(childNode.getDown())))){
+                        //дополняем его в Map (по факту заменяем, но в методе addNodeInSet этот Set дополняется
+                        objects.put(sep.getObject(childNode.getDown()), addNodeInSet(childNode));    //вставляем
+                        //добавляем найденый производный узел в спизок всех возможных узлов
+                        nodes.add(childNode);
+                    }
+                } else {
+                    //кладем узел в Map
+                    objects.put(sep.getObject(childNode.getDown()), addNodeInSet(childNode));
                     //добавляем найденый производный узел в спизок всех возможных узлов
-                    nodes.add(requiredChildNode);
+                    nodes.add(childNode);
                 }
-            } else {
-                //кладем узел в Map
-                objects.put(sep.getObject(requiredChildNode.getDown()), requiredChildNode);
-                //добавляем найденый производный узел в спизок всех возможных узлов
-                nodes.add(requiredChildNode);
             }
 
             for (Node node : nodes) {                                       //проверяем на окончание цикла
                 if (sep.isEnd(node.getDown())) {
-                    minDistanceObject = node.getDistance();                 //если нашли сундук, то записываем в minDistanceObject значение пути
-                    map.put(node.getDown(), node.getDistance());
+                    //только в случае distanceRightPath == Integer.MAX_VALUE
+                    if (distanceRightPath == Integer.MAX_VALUE)             //если нашли сундук, то записываем в
+                        distanceRightPath = node.getDistance();             //distanceRightPath значение пути
+                    paths.put(node.getDown(), node.getDistance());
                     break;
                 }
             }
-        } while (minDistanceObject == Integer.MAX_VALUE);
 
-        nodes.forEach(node -> System.out.println(node.getDown()));
-
-        //пробегаемся по всем оставшимся узлам, находя другие пути, не превышающие minDistanceObject
-        boolean end;
-
-        do{
-            end = false;
-
-            int minDistance = Integer.MAX_VALUE;
-
-            Node currentNode = null;          //текущий узел из которого мы берем требуемый производный узел
-            Node requiredChildNode = null;    //найденый производный узел
-
-            for (Node node : nodes){                                        //проходимся по всем узлам
-                for(Object element : node.getChilds()){                     //проходимся по производным элементам этих узлов
-                    Node nodeChild = new Node(node, element);
-                    nodeChild.setDistance(sep.getDistance(node.getDown(), element));
-                    if (nodeChild.getDistance() < minDistance && nodeChild.getDistance() <= minDistanceObject){
-                        nodeChild.setChilds(sep.getElements(node.getDown(), element));
-                        currentNode = node;
-                        requiredChildNode = nodeChild;
-                        end = true;
-                    }
+            nodes.forEach(node -> {
+                if (node.getDistance() < minDistance){
+                    minDistance = node.getDistance();
                 }
-            }
+            });
 
-            //удаляем производный узел из списка списка возможных узлов текущего узла
-            if (requiredChildNode != null) currentNode.deleteChild(requiredChildNode.getElement());
+            System.out.println("min = " + minDistance + "; right = " + distanceRightPath);
 
-            //удаляем из списка возможных узлов узел с пустым списком всех возможных производных узлов
-            if (currentNode != null) if (currentNode.isEmpotyChild()) nodes.remove(currentNode);
+        } while (minDistance <= distanceRightPath);
 
-            if (requiredChildNode != null) {
-                //если этот найденый производный элемент есть в objects
-                if (objects.get(sep.getObject(requiredChildNode.getDown())) != null){
-                    //если в найденом производном элементе distance <= чем в Map (с этими координатами)
-                    if (requiredChildNode.getDistance() < objects.get(sep.getObject(requiredChildNode.getDown())).getDistance()){
-                        //удаляем этот узел в nodes, доставая его из Map'а
-                        nodes.remove(objects.get(sep.getObject(requiredChildNode.getDown())));
-                        //заменяем его в Map
-                        objects.remove(objects.get(sep.getObject(requiredChildNode.getDown())));                    //удаляем
-                        objects.put(objects.get(sep.getObject(requiredChildNode.getDown())), requiredChildNode);    //вставляем
-                        //добавляем найденый производный узел в спизок всех возможных узлов
-                        nodes.add(requiredChildNode);
-                    }
-                } else {
-                    //кладем узел в Map
-                    objects.put(sep.getObject(requiredChildNode.getDown()), requiredChildNode);
-                    //добавляем найденый производный узел в спизок всех возможных узлов
-                    nodes.add(requiredChildNode);
-                }
-            }
+        paths.keySet().forEach(System.out::println);
 
-            for (Node node : nodes) {                    //проверяем на на то, стоит ли из положить в map или нет
-                if (sep.isEnd(node.getDown())) {         //?
-                    map.put(node.getDown(), node.getDistance());
-                }
-            }
-
-            for (Node node : nodes) {                    //вывод
-                System.out.println(node.getDistance());
-            }
-
-            System.out.println("------------------------------");
-
-        } while (end);
-
-        //находим минимальную дистанцию
-        int minDistance = Integer.MAX_VALUE;
-        for (Integer distance : map.values()){
-            if (distance < minDistance) minDistance = distance;
-        }
-
-        //сохраняем все пути с минимальной дистанцией
-        for (Node node : nodes){
-            if (node.getDistance() == minDistance) sep.save(node.getDown());
-        }
-
+        paths.keySet().forEach(sep::save);
     }
 
     @Override
@@ -206,6 +158,8 @@ public class StrategyEP implements Algorithm{
         private List<E> childs;
         private int distance;
 
+        private List elements;
+
         public Node(){
 
         }
@@ -216,16 +170,18 @@ public class StrategyEP implements Algorithm{
         }
 
         public List getDown() {
-            List elements = new ArrayList();
-            Node currentNode = this;
+            if (elements == null) {
+                elements = new ArrayList();
+                Node currentNode = this;
 
-            while (true){
-                elements.add(currentNode.getElement());
-                if (currentNode.getPreviousNode() != null) currentNode = currentNode.getPreviousNode();
-                else break;
+                while (true){
+                    elements.add(currentNode.getElement());
+                    if (currentNode.getPreviousNode() != null) currentNode = currentNode.getPreviousNode();
+                    else break;
+                }
+
+                Collections.reverse(elements);
             }
-
-            Collections.reverse(elements);
 
             return elements;
         }

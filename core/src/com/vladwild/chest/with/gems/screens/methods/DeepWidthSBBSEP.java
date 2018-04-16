@@ -140,12 +140,12 @@ public class DeepWidthSBBSEP extends GamePlay implements Screen {
         //стратегия равных цен
 
         //сундук
-        Algorithm algorithm = FactorySEP.getTypeSBB(FactorySEP.STRATEGY_EP,
-                FactoryTasksSearchStrategyEP.getTypeTask(FactoryTasksSearchStrategyEP.CHEST, field));
+        //Algorithm algorithm = FactorySEP.getTypeSBB(FactorySEP.STRATEGY_EP,
+        //        FactoryTasksSearchStrategyEP.getTypeTask(FactoryTasksSearchStrategyEP.CHEST, field));
 
         //все ключи и сундук
-        //Algorithm algorithm = FactorySEP.getTypeSBB(FactorySEP.STRATEGY_EP,
-        //        FactoryTasksSearchStrategyEP.getTypeTask(FactoryTasksSearchStrategyEP.KEYS, field));
+        Algorithm algorithm = FactorySEP.getTypeSBB(FactorySEP.STRATEGY_EP,
+                FactoryTasksSearchStrategyEP.getTypeTask(FactoryTasksSearchStrategyEP.KEYS, field));
 
         algorithm.start();
         variants = algorithm.getVariants();

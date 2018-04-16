@@ -123,10 +123,7 @@ public class Chest extends Labyrinth implements SearchFunction, SearchStrategyBB
 
         human = new GridPoint2(START_HUMAN);        //присваиваем стартовые координаты человека
 
-        directions.forEach(direction -> {
-            walk(direction);
-            if (human.equals(chest)) ways.add(directions);
-        });
+        directions.forEach(super::walk);
 
         GridPoint2 point = new GridPoint2(human);
 
